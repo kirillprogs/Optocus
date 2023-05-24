@@ -1,3 +1,6 @@
+//
+// Created by kirill on 24/05/23.
+//
 #include <QApplication>
 #include <QPushButton>
 

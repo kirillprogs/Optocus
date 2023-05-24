@@ -14,10 +14,10 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(Optocus main.cpp)
+add_executable(Optocus src/main.cpp)
+
 target_link_libraries(Optocus
         Qt::Core
         Qt::Gui
         Qt::Widgets
         )
-
