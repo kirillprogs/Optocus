@@ -14,7 +14,8 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(Optocus src/main.cpp)
+include_directories(Optocus include)
+add_executable(Optocus src/main.cpp include/Header.h)
 
 target_link_libraries(Optocus
         Qt::Core
