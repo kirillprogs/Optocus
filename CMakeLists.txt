@@ -16,8 +16,15 @@ find_package(Qt6 COMPONENTS
 
 include_directories(Optocus include)
 add_executable(Optocus src/main.cpp src/Window.cpp include/Window.h)
-
 target_link_libraries(Optocus
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets
+        )
+
+include_directories(Rectangle test/src test/include)
+add_executable(Rectangle test/src/rectangle.cpp)
+target_link_libraries(Rectangle
         Qt::Core
         Qt::Gui
         Qt::Widgets
