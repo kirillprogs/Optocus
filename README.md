@@ -1,2 +1,2 @@
-Octopus
-Autors: Lilia Parashchak and Kyrylo Pervushyn
+# Optocus
+Authors: Liliia Parashchak and Kyrylo Pervushyn
