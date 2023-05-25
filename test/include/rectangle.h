@@ -1,0 +1,4 @@
+#ifndef OPTOCUS_RECTANGLE_H
+#define OPTOCUS_RECTANGLE_H
+
+#endif

@@ -23,7 +23,7 @@ target_link_libraries(Optocus
         )
 
 include_directories(Rectangle test/src test/include)
-add_executable(Rectangle test/src/rectangle.cpp)
+add_executable(Rectangle test/src/rectangle.cpp test/include/rectangle.h)
 target_link_libraries(Rectangle
         Qt::Core
         Qt::Gui
