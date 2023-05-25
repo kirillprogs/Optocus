@@ -15,7 +15,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 include_directories(Optocus include)
-add_executable(Optocus src/main.cpp include/Header.h)
+add_executable(Optocus src/main.cpp include/Header.h src/Window.cpp src/Window.h)
 
 target_link_libraries(Optocus
         Qt::Core
