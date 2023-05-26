@@ -15,7 +15,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 include_directories(Optocus include)
-add_executable(Optocus src/main.cpp src/Window.cpp include/Window.h)
+add_executable(Optocus src/main.cpp src/Window.cpp include/Window.h src/pages/gui_logic/pages.cpp src/pages/gui_logic/pages.h src/pages/gui_logic/pages.ui src/pages/gui_logic/pages.h src/pages/gui_logic/pages.h src/pages/HomePageWidget.cpp src/pages/HomePageWidget.h src/pages/ModelingPageWidget.cpp src/pages/ModelingPageWidget.h src/pages/CalculatorPageWidget.cpp src/pages/CalculatorPageWidget.h src/pages/DevicesPageWidget.cpp src/pages/DevicesPageWidget.h src/pages/PhenomPageWidget.cpp src/pages/PhenomPageWidget.h src/style/OptStyle.cpp src/style/OptStyle.h)
 target_link_libraries(Optocus
         Qt::Core
         Qt::Gui
