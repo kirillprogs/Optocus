@@ -1,0 +1,4 @@
+#ifndef OPTOCUS_SEGMENT_H
+#define OPTOCUS_SEGMENT_H
+
+#endif

@@ -15,7 +15,19 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 include_directories(Optocus include)
-add_executable(Optocus src/main.cpp src/Window.cpp include/Window.h include/model/Lens.h include/model/System.h include/model/RayTrace.h)
+add_executable(Optocus src/main.cpp
+        include/calculating/Lens.h
+        include/calculating/OpticalSystem.h
+        include/calculating/Object.h
+        include/calculating/Point.h
+        include/calculating/Ray.h
+        src/calculating/Lens.cpp
+        src/calculating/Object.cpp
+        src/calculating/Ray.cpp
+        src/calculating/Point.cpp
+        include/calculating/OpticalDevice.h src/Window.cpp
+        include/calculating/Segment.h src/calculating/Segment.cpp)
+
 target_link_libraries(Optocus
         Qt::Core
         Qt::Gui
