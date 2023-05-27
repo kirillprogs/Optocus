@@ -9,7 +9,6 @@ Ray::Ray(double x1, double y1, double x2, double y2) {
         min = Point(x2,y2);
         max = Point(x1,y1);
     }
-
     if (x1 == x2) {
         // TODO: maybe exception?
     }
@@ -25,8 +24,7 @@ Ray::Ray(double x1, double y1, double x2, double y2) {
 Ray::Ray(Point p1, Point p2) : Ray(p1.x(), p1.y(), p2.x(), p2.y()) { }
 
 Ray Ray::refractionRay(Lens l) {
-    double F = l.getFocus();
-
+    double F = l.getFocusLength();
     if(isParallel()) {
         // parallel
         return focusRefraction(l);
@@ -44,21 +42,34 @@ Ray Ray::refractionRay(Lens l) {
     } else if (pointIsOnRay(Point(F, 0))) {
         return parallelRefraction(l);
     }
-
     // TODO: exception or calculate uncommon rays
     return {0, 0, 0, 0};
 }
 
-Ray Ray::refract(const Lens &lens) const {
-    ;
+void Ray::setMin(const Point& minP) {
+    if(pointIsOnRay(minP)) {
+        this->min = minP;
+    }
+    else {
+        // TODO: exception
+    }
+}
+
+void Ray::setMax(const Point& maxP) {
+    if(pointIsOnRay(maxP)) {
+        this->max = maxP;
+    }
+    else {
+        // TODO: exception
+    }
 }
 
 Ray Ray::parallelRefraction(const Lens &lens) {
-    return {max.x(), max.y(), lens.getFocus(), max.y()};
+    return {max.x(), max.y(), lens.getFocusLength(), max.y()};
 }
 
 Ray Ray::focusRefraction(const Lens &lens) {
-    double F = lens.getFocus();
+    double F = lens.getFocusLength();
     if (lens.isConv()) {
         return {max, Point(F,0)};
     }
@@ -88,9 +99,9 @@ Point Ray::intersect(const Ray& ray) const {
      * y = k2*x + b2
      *
      *  x * (k1 - k2) = b2 - b1
-     *  x = (b2 - b1)/(k1 - k2)
+     *  x = (b2 - b1) / (k1 - k2)
      */
-    double x = (ray.getB() - getB())/(getK() - ray.getK());
-    double y = getK()*x + getB();
+    double x = (ray.getB() - getB()) / (getK() - ray.getK());
+    double y = getK() * x + getB();
     return Point(x, y);
 }

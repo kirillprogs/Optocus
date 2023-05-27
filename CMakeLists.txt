@@ -26,7 +26,7 @@ add_executable(Optocus src/main.cpp
         src/calculating/Ray.cpp
         src/calculating/Point.cpp
         include/calculating/OpticalDevice.h src/Window.cpp
-        include/calculating/Segment.h src/calculating/Segment.cpp)
+        include/calculating/Segment.h src/calculating/Segment.cpp include/calculating/Image.h src/calculating/Image.cpp)
 
 target_link_libraries(Optocus
         Qt::Core

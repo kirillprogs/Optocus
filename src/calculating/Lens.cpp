@@ -1,34 +1,39 @@
 #include "calculating/Lens.h"
-#include "calculating/Ray.h"
-#include <cmath>
 
-Lens::Lens(double opt_pow) : _opt_pow(opt_pow) { }
+Lens::Lens(double opt_pow, double x, double height)
+        : _opt_pow(opt_pow), _x(x), _height(height) { }
 
-double Lens::getFocus() const { return std::abs(1 / _opt_pow); }
+double Lens::getFocus() const { return 1 / _opt_pow; }
+double Lens::getFocusLength() const { return std::abs(1 / _opt_pow); }
+
 bool Lens::isConv() const { return _opt_pow > 0; }
 
-double Lens::getDistanceToImage(double d) const {
-    return d / (d * _opt_pow - 1);
+double Lens::getDistanceToImage(double d) const { return 1 / (optPow() - 1 / d); }
+double Lens::getDistanceToObject(double f) const { return 1 / (optPow() - 1 / f); }
+
+double Lens::getImgHeight(double h, double f, double d) { return h * (f / d); }
+double Lens::getObjHeight(double H, double f, double d) { return H * (d / f); }
+
+double Lens::getOptPow(double d, double f) { return 1/d + 1/f; }
+
+Point Lens::getImage(const Point &point)
+{
+    double d = x() - point.x();
+    if (d == getFocus()) {
+        // NO IMAGE
+        return Point(INFINITY, INFINITY);
+    } else if (d != 0) {
+        double f = getDistanceToImage(d);
+        return Point(x() + f, getImgHeight(point.y(), f, d));
+    }
+    return point;
 }
 
-double Lens::getDistanceToObject(double f) const {
-    return f / (f * _opt_pow - 1);
-}
-
-double Lens::getImgHeight(double H, double f, double d) {
-    return f * H / d;
-}
-
-double Lens::getObjHeight(double H, double f, double d) {
-    return H * d / f;
-}
-
-double Lens::getOptPow(double d, double f) {
-    return 1/d + 1/f;
-}
-
-Point Lens::getImage(const Point &point) {
-    ;
+Image Lens::getImageRays(const Point &point)
+{
+    Image image(point, getImage(point));
+    image.addRay(Segment(point, Point(x(), point.y())));
+    image.addRay(Segment(point, Point(x(), 0)));
 }
 
 Object Lens::getImage(const Object& obj) {

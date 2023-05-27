@@ -5,9 +5,7 @@
 #include "Point.h"
 
 class Ray {
-private:
     double _k, _b;
-    // використаємо мін та макс як межі малювання променя. а також для координат променів, які від них заломляться
     Point min, max;
     bool parallel = false;
 
@@ -22,25 +20,9 @@ public:
 
     bool pointIsOnRay(const Point &point) const;
 
-    void setMin(const Point& minP) {
-        if(pointIsOnRay(minP)) {
-            this->min = minP;
-        }
-        else {
-            // TODO: exception
-        }
-    }
+    void setMin(const Point &minP);
+    void setMax(const Point &maxP);
 
-    void setMax(const Point& maxP) {
-        if(pointIsOnRay(maxP)) {
-            this->max = maxP;
-        }
-        else {
-            // TODO: exception
-        }
-    }
-
-    Ray refract(const Lens& lens) const;
     Ray parallelRefraction(const Lens &lens);
     Ray focusRefraction(const Lens &lens);
     Ray straightRefraction();
