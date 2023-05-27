@@ -27,6 +27,7 @@ public:
 
     double getFocus() const;
     double getFocusLength() const;
+
     // converging or diffusing
     bool isConv() const;
 

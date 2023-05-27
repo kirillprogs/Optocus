@@ -17,6 +17,9 @@ public:
 
     const Point &start() const { return _a; }
     const Point &end() const { return _b; }
+
+    Point projection(Point &point) const;
+    Point intersection(const Segment &o) const;
 };
 
 #endif

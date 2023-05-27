@@ -34,6 +34,8 @@ Image Lens::getImageRays(const Point &point)
     Image image(point, getImage(point));
     image.addRay(Segment(point, Point(x(), point.y())));
     image.addRay(Segment(point, Point(x(), 0)));
+    // TODO here just add all the rays
+    return image;
 }
 
 Object Lens::getImage(const Object& obj) {

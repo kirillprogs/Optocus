@@ -16,6 +16,8 @@ public:
     Image(Point point, Point image)
             : _point(point), _image(image) { }
     void addRay(const Segment &);
+    const Point &getPoint() const { return _point; }
+    const Point &getImage() const { return _image; }
     const list<Segment>& getRays() const;
 };
 

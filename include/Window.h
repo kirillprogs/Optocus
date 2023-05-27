@@ -1,4 +1,0 @@
-#ifndef OPTOCUS_WINDOW_H
-#define OPTOCUS_WINDOW_H
-
-#endif //OPTOCUS_WINDOW_H
