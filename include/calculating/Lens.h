@@ -3,10 +3,10 @@
 
 #include <cmath>
 
-#include "Ray.h"
 #include "Object.h"
 #include "Image.h"
 
+class Ray;
 class Lens {
     double _opt_pow;
     double _height;

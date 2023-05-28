@@ -1,9 +1,9 @@
 #ifndef OPTOCUS_RAY_H
 #define OPTOCUS_RAY_H
 
-#include "Lens.h"
 #include "Point.h"
 
+class Lens;
 class Ray {
     double _k, _b;
     Point min, max;
