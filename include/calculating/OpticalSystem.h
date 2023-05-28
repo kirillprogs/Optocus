@@ -1,5 +1,5 @@
-#ifndef OPTOCUS_OPTICALSYSTEM_H
-#define OPTOCUS_OPTICALSYSTEM_H
+#ifndef OPTOCUS_OPTICAL_SYSTEM_H
+#define OPTOCUS_OPTICAL_SYSTEM_H
 
 #include <vector>
 #include "Lens.h"

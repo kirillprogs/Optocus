@@ -1,7 +1,7 @@
-#ifndef OPTOCUS_OPTICALDEVICE_H
-#define OPTOCUS_OPTICALDEVICE_H
+#ifndef OPTOCUS_OPTICAL_DEVICE_H
+#define OPTOCUS_OPTICAL_DEVICE_H
 
-#include "Point.h"
+#include "geometry/Point.h"
 
 class OpticalDevice {
 

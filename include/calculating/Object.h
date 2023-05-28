@@ -1,7 +1,7 @@
 #ifndef OPTOCUS_OBJECT_H
 #define OPTOCUS_OBJECT_H
 
-#include "Point.h"
+#include "geometry/Point.h"
 
 class Object {
 private:

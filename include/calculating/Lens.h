@@ -27,9 +27,10 @@ public:
 
     double getFocus() const;
     double getFocusLength() const;
+    void setFocusLength(double length);
 
     // converging or diffusing
-    bool isConv() const;
+    bool isConverging() const;
 
     // get distance to image from distance to object
     double getDistanceToImage(double d) const;
@@ -42,8 +43,10 @@ public:
     // calculate optical power
     static double getOptPow(double d, double f);
 
-    Point getImage(const Point &point);
-    Image getImageRays(const Point &point);
+    Point getImagePoint(const Point &point);
+    Image<Point> getImage(const Point &point);
+    Image<Segment> getImage(const Segment &segment);
+    Image<Ray> getImage(const Ray &ray);
     Object getImage(const Object& obj);
 };
 

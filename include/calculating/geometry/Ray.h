@@ -6,7 +6,7 @@
 class Lens;
 class Ray {
     double _k, _b;
-    Point min, max;
+    Point _min, _max;
     bool parallel = false;
 
 public:
@@ -17,6 +17,12 @@ public:
 
     double getK() const { return _k; }
     double getB() const { return _b; }
+
+    Point &min() { return _min; }
+    Point &max() { return _max; }
+
+    const Point &min() const { return _min; }
+    const Point &max() const { return _max; }
 
     bool pointIsOnRay(const Point &point) const;
 

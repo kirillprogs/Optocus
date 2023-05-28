@@ -1,14 +1,14 @@
-#include "calculating/Ray.h"
+#include "calculating/geometry/Ray.h"
 #include "calculating/Lens.h"
 
 Ray::Ray(double x1, double y1, double x2, double y2) {
     if (x1 < x2) {
-        min = Point(x1,y1);
-        max = Point(x2,y2);
+        _min = Point(x1, y1);
+        _max = Point(x2, y2);
     }
     else {
-        min = Point(x2,y2);
-        max = Point(x1,y1);
+        _min = Point(x2, y2);
+        _max = Point(x1, y1);
     }
     if (x1 == x2) {
         // TODO: maybe exception?
@@ -30,12 +30,12 @@ Ray Ray::refractionRay(Lens l) {
         // parallel
         return focusRefraction(l);
     }
-    else if(max.x() == 0 && _b == 0) {
+    else if(_max.x() == 0 && _b == 0) {
         // optical center
         return straightRefraction();
     }
 
-    if (l.isConv()) {
+    if (l.isConverging()) {
         if (pointIsOnRay(Point(-F, 0))) {
             // focus
             return parallelRefraction(l);
@@ -49,7 +49,7 @@ Ray Ray::refractionRay(Lens l) {
 
 void Ray::setMin(const Point& minP) {
     if(pointIsOnRay(minP)) {
-        this->min = minP;
+        this->_min = minP;
     }
     else {
         // TODO: exception
@@ -58,7 +58,7 @@ void Ray::setMin(const Point& minP) {
 
 void Ray::setMax(const Point& maxP) {
     if(pointIsOnRay(maxP)) {
-        this->max = maxP;
+        this->_max = maxP;
     }
     else {
         // TODO: exception
@@ -66,19 +66,19 @@ void Ray::setMax(const Point& maxP) {
 }
 
 Ray Ray::parallelRefraction(const Lens &lens) {
-    return {max.x(), max.y(), lens.getFocusLength(), max.y()};
+    return {_max.x(), _max.y(), lens.getFocusLength(), _max.y()};
 }
 
 Ray Ray::focusRefraction(const Lens &lens) {
     double F = lens.getFocusLength();
-    if (lens.isConv()) {
-        return {max, Point(F,0)};
+    if (lens.isConverging()) {
+        return {_max, Point(F, 0)};
     }
     else {
-        Ray res = Ray(Point(-F, 0), max);
+        Ray res = Ray(Point(-F, 0), _max);
         // TODO: draw grey ray to show building ???
 
-        res.setMin(max);
+        res.setMin(_max);
         res.setMax(Point(F, res.getK() * F + res.getB()));
         return res;
     }
@@ -86,8 +86,8 @@ Ray Ray::focusRefraction(const Lens &lens) {
 
 Ray Ray::straightRefraction() {
     Ray res = *this;
-    res.setMin(max);
-    res.setMax(Point(-min.x(), -min.y()));
+    res.setMin(_max);
+    res.setMax(Point(-_min.x(), -_min.y()));
     return res;
 }
 
