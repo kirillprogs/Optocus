@@ -14,13 +14,11 @@ CalculatorPageWidget::CalculatorPageWidget(QWidget *parent) {
     QVBoxLayout* layout = new QVBoxLayout(centralWidget);
     layout->setAlignment(Qt::AlignCenter);
 
-    QLabel* titleLabel = new QLabel("CALCULATOR PAGE", this);
-    titleLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(titleLabel);
-
-    QFont titleFont = titleLabel->font();
-    titleFont.setPointSize(48);
-    titleLabel->setFont(titleFont);
+    QLabel* logoLabel = new QLabel(this);
+    QPixmap logoPixmap("../images/formulas.jpg");
+    logoLabel->setPixmap(logoPixmap);
+    logoLabel->setAlignment(Qt::AlignCenter);
+    layout->addWidget(logoLabel);
 
     mainLayout->addWidget(centralWidget);
 }
