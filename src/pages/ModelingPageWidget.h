@@ -7,13 +7,14 @@
 
 
 #include <QWidget>
+#include "../graphics/GraphicsPanel.h"
 
 class ModelingPageWidget : public QWidget  {
     Q_OBJECT
 public:
     explicit ModelingPageWidget(QWidget *parent = nullptr);
 private:
-    // необхідні елементи і логіка для сторінки "Моделювання"
+    // GraphicsPanel *graphicsPanel;
 };
 
 
