@@ -31,31 +31,119 @@ Point Lens::getImagePoint(const Point &point)
 }
 
 Image<Point> Lens::convergingReal(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(point, pointProjection));
+    imageObj.addRay(Segment(point, foreFocus));
+    imageObj.addRay(Segment(point, opticalCentre));
+    imageObj.addRay(Segment(foreFocus, imageProjection));
+    imageObj.addRay(Segment(pointProjection, aftFocus));
+    imageObj.addRay(Segment(aftFocus, image));
+    imageObj.addRay(Segment(opticalCentre, image));
+    imageObj.addRay(Segment(imageProjection, image));
+    return imageObj;
 }
 
 Image<Point> Lens::convergingImag(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(point, pointProjection));
+    imageObj.addRay(Segment(point, imageProjection));
+    imageObj.addRay(Segment(point, opticalCentre));
+    imageObj.addRay(Segment(image, point), false);
+    imageObj.addRay(Segment(image, imageProjection), false);
+    imageObj.addRay(Segment(image, pointProjection), false);
+    imageObj.addRay(Segment(foreFocus, point));
+    return imageObj;
 }
 
 Image<Point> Lens::convergingAft(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(opticalCentre, image));
+    imageObj.addRay(Segment(image, point), false);
+    imageObj.addRay(Segment(pointProjection, point), false);
+    imageObj.addRay(Segment(pointProjection, image));
+    imageObj.addRay(Segment(image, aftFocus));
+    imageObj.addRay(Segment(image, aftFocus), false);
+    imageObj.addRay(Segment(foreFocus, imageProjection), false);
+    imageObj.addRay(Segment(imageProjection, point), false);
+    imageObj.addRay(Segment(imageProjection, image));
+    return imageObj;
 }
 
 Image<Point> Lens::divergingFore(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(point, pointProjection));
+    imageObj.addRay(Segment(point, image));
+    imageObj.addRay(Segment(image, opticalCentre));
+    imageObj.addRay(Segment(point, imageProjection));
+    imageObj.addRay(Segment(foreFocus, image), false);
+    imageObj.addRay(Segment(image, pointProjection), false);
+    imageObj.addRay(Segment(image, imageProjection), false);
+    imageObj.addRay(Segment(imageProjection, aftFocus), false);
+    return imageObj;
 }
 
 Image<Point> Lens::divergingReal(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(imageProjection, image));
+    imageObj.addRay(Segment(pointProjection, image));
+    imageObj.addRay(Segment(opticalCentre, image));
+    imageObj.addRay(Segment(opticalCentre, point), false);
+    imageObj.addRay(Segment(pointProjection, point), false);
+    imageObj.addRay(Segment(imageProjection, point), false);
+    imageObj.addRay(Segment(point, aftFocus), false);
+    imageObj.addRay(Segment(foreFocus, pointProjection), false);
+    return imageObj;
 }
 
 Image<Point> Lens::divergingImag(const Point &point) {
-    return Image<Point>();
+    Point image(getImagePoint(point));
+    Image<Point> imageObj(point, image);
+    Point pointProjection(x(), point.y());
+    Point imageProjection(x(), image.y());
+    Point foreFocus(x() - getFocusLength());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    imageObj.addRay(Segment(pointProjection, point), false);
+    imageObj.addRay(Segment(image, foreFocus), false);
+    imageObj.addRay(Segment(foreFocus, pointProjection), false);
+    imageObj.addRay(Segment(image, imageProjection), false);
+    imageObj.addRay(Segment(imageProjection, aftFocus), false);
+    imageObj.addRay(Segment(aftFocus, point), false);
+    imageObj.addRay(Segment(image, opticalCentre), false);
+    imageObj.addRay(Segment(opticalCentre, point), false);
+    return imageObj;
 }
 
 Image<Point> Lens::getImage(const Point &point) {
-    Point imagePoint = getImagePoint(point);
     if (isConverging()) {
         if (point.x() < x() - getFocusLength())
             return convergingReal(point);
@@ -122,26 +210,4 @@ Image<Segment> Lens::getImage(const Segment &ray) {
 
         } */
     }
-}
-
-Object Lens::getImage(const Object& obj) {
-    Point a = obj.getA();
-    Point b = obj.getB();
-    Ray firstA = Ray(Point(a.x(), a.y()), Point(0, a.y()));
-    Ray secondA = Ray(Point(a.x(), a.y()), Point(0, 0));
-
-    Ray refractA1 = firstA.refractionRay(*this);
-    Ray refractA2 = secondA.refractionRay(*this);
-
-    Point a_img = refractA1.intersect(refractA2);
-
-    Ray firstB = Ray(Point(b.x(), b.y()), Point(0, b.y()));
-    Ray secondB = Ray(Point(b.x(), b.y()), Point(0, 0));
-
-    Ray refractB1 = firstB.refractionRay(*this);
-    Ray refractB2 = secondB.refractionRay(*this);
-
-    Point b_img = refractB1.intersect(refractB2);
-
-    return {a_img, b_img, true};
 }

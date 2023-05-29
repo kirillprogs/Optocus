@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Lens.h"
-#include "OpticalDevice.h"
 
 using std::vector;
 
@@ -13,15 +12,15 @@ class OpticalSystem {
         double _x;
     };
 
-    vector<OpticalDevice> _lenses;
+    vector<Lens> _lenses;
 
 public:
     OpticalSystem() = default;
     OpticalSystem(const OpticalSystem& o) = default;
     OpticalSystem& operator=(const OpticalSystem& o) = default;
 
-    const vector<OpticalDevice>& device() const;
-    void addDevice(const OpticalDevice&);
+    const vector<Lens>& devices() const;
+    void addDevice(const Lens&);
 };
 
 #endif

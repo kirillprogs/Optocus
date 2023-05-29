@@ -59,7 +59,6 @@ private:
 public:
     Image<Point> getImage(const Point &point);
     Image<Segment> getImage(const Segment &segment);
-    Object getImage(const Object& obj);
 };
 
 #endif
