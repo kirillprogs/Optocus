@@ -37,6 +37,10 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Point);
     });
     QPushButton *changeScaleButton = new QPushButton("Поміняти масштаб");
+    QPushButton *saveButton = new QPushButton("Зберегти модель", this);
+    connect(saveButton, &QPushButton::clicked, [=]() {
+        drawingWidget->saveModel();
+    });
     QPushButton *clearButton = new QPushButton("Очистити");
     connect(clearButton, &QPushButton::clicked, [=]() {
         drawingWidget->clearPanel();
@@ -47,6 +51,7 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     buttonPanelLayout->addWidget(drawObjectButton);
     buttonPanelLayout->addWidget(drawPointButton);
     buttonPanelLayout->addWidget(changeScaleButton);
+    buttonPanelLayout->addWidget(saveButton);
     buttonPanelLayout->addWidget(clearButton);
 
     // Нижня права панель результатів обчислень

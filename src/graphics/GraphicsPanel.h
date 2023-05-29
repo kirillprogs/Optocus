@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QFileDialog>
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -26,6 +27,8 @@ public:
         drawMode = mode;
     }
     void clearPanel();
+
+    void saveModel();
 protected:
     float scaleFactor;
     void initializeGL() override;
@@ -34,6 +37,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 private:
+    QPixmap pixmap;
     int cellSize;
     QVector<QPointF> points;
     QVector<QPair<QPointF, QPointF>> lines;

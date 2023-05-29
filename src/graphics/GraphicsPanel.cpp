@@ -18,7 +18,9 @@ void GraphicsPanel::paintGL()  {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    QPainter painter;
+    pixmap = QPixmap(size());
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
     painter.begin(this);
 
     int width = this->width();
@@ -92,6 +94,10 @@ void GraphicsPanel::paintGL()  {
     }
 
     painter.end();
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    QPainter painterGL(this);
+    painterGL.drawPixmap(0, 0, pixmap);
 }
 
 void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
@@ -161,4 +167,11 @@ void GraphicsPanel::clearPanel() {
     points.clear();
     lines.clear();
     update();
+}
+
+void GraphicsPanel::saveModel() {
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("Images (*.png *.xpm *.jpg)"));
+    if (!filePath.isEmpty()) {
+        pixmap.save(filePath);
+    }
 }
