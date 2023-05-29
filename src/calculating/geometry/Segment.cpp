@@ -35,11 +35,11 @@ Point Segment::intersection(const Segment &o) const
                  (a1 * c2 - a2 * c1) / (a1 * b2 - a2 * b1));
 }
 
-Point Segment::intersectsVertical(double x) const {
+double Segment::intersectsVertical(double x) const {
     double a = getCanonicalA();
     double b = getCanonicalB();
     double c = getCanonicalC();
     if (b == 0)
-        return Point(x, INFINITY);
-    return Point(x, (c - a * x) / b);
+        return INFINITY;
+    return (c - a * x) / b;
 }

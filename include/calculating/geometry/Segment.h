@@ -43,7 +43,7 @@ public:
 
     Point projection(Point &point) const;
     Point intersection(const Segment &o) const;
-    Point intersectsVertical(double x) const;
+    double intersectsVertical(double x) const;
 };
 
 #endif

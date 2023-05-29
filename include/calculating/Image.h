@@ -20,13 +20,12 @@ public:
     void addRay(const Segment&, bool isReal = true);
     const T &getObject() const { return _object; }
     const T &getImage() const { return _image; }
-    const list<Segment> &getRealRays() const { return _real_rays; };
+    const list<Segment> &getRealRays() const { return _real_rays; }
     const list<Segment> &getImagRays() const { return _imag_rays; }
 };
 
 template<class T>
-void Image<T>::addRay(const Segment &segment, bool isReal)
-{
+void Image<T>::addRay(const Segment &segment, bool isReal) {
     isReal ? _real_rays.push_back(segment) : _imag_rays.push_back(segment);
 }
 

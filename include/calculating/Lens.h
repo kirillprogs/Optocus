@@ -1,10 +1,13 @@
 #ifndef OPTOCUS_LENS_H
 #define OPTOCUS_LENS_H
 
+#include <list>
 #include <cmath>
 
 #include "Object.h"
 #include "Image.h"
+
+using std::list;
 
 class Ray;
 class Lens {
@@ -44,9 +47,18 @@ public:
     static double getOptPow(double d, double f);
 
     Point getImagePoint(const Point &point);
+
+private:
+    Image<Point> convergingReal(const Point &point);
+    Image<Point> convergingImag(const Point &point);
+    Image<Point> convergingAft(const Point &point);
+    Image<Point> divergingFore(const Point &point);
+    Image<Point> divergingReal(const Point &point);
+    Image<Point> divergingImag(const Point &point);
+
+public:
     Image<Point> getImage(const Point &point);
     Image<Segment> getImage(const Segment &segment);
-    Image<Ray> getImage(const Ray &ray);
     Object getImage(const Object& obj);
 };
 
