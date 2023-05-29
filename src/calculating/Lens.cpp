@@ -1,5 +1,4 @@
 #include "calculating/Lens.h"
-#include "calculating/geometry/Ray.h"
 
 Lens::Lens(double opt_pow, double x, double height)
         : _opt_pow(opt_pow), _x(x), _height(height) { }
@@ -183,11 +182,12 @@ Image<Segment> Lens::getImage(const Segment &ray) {
     /* Ray goes through focus and should be retracted parallel to the optical line */
     if (crossAxis.x() == x() - getFocus()) {
         Point backFocal(x() + getFocusLength(), crossLens.y());
-        return Image<Segment>(goodRay, Segment(crossLens, backFocal));
+        return Image<Segment>(goodRay, Segment(crossLens, backFocal, true, false));
     }
+    /* Arbitrary rays */
     Point imagePoint = getImagePoint(crossAxis);
     Segment retractedSegment(imagePoint, crossLens);
     Point backFocal(x() + getFocusLength(),
                     retractedSegment.intersectsVertical(x() + getFocusLength()));
-    return Image<Segment>(goodRay, Segment(crossLens, backFocal));
+    return Image<Segment>(goodRay, Segment(crossLens, backFocal, true, false));
 }

@@ -4,12 +4,10 @@
 #include <list>
 #include <cmath>
 
-#include "Object.h"
 #include "Image.h"
 
 using std::list;
 
-class Ray;
 class Lens {
     double _opt_pow;
     double _height;

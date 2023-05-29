@@ -9,7 +9,6 @@ using std::list;
 
 template <class T>
 class Image {
-
     const T _object, _image;
     list<Segment> _rays;
     list<Segment> _imag_rays;
