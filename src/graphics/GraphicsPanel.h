@@ -25,6 +25,7 @@ public:
     void setDrawMode(DrawMode mode) {
         drawMode = mode;
     }
+    void clearPanel();
 protected:
     float scaleFactor;
     void initializeGL() override;

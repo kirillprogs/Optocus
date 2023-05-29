@@ -6,7 +6,6 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QOpenGLWidget>
 #include "ModelingPageWidget.h"
 
 ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
@@ -38,12 +37,17 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Point);
     });
     QPushButton *changeScaleButton = new QPushButton("Поміняти масштаб");
+    QPushButton *clearButton = new QPushButton("Очистити");
+    connect(clearButton, &QPushButton::clicked, [=]() {
+        drawingWidget->clearPanel();
+    });
 
     buttonPanelLayout->addWidget(addLensButton);
     buttonPanelLayout->addWidget(drawRayButton);
     buttonPanelLayout->addWidget(drawObjectButton);
     buttonPanelLayout->addWidget(drawPointButton);
     buttonPanelLayout->addWidget(changeScaleButton);
+    buttonPanelLayout->addWidget(clearButton);
 
     // Нижня права панель результатів обчислень
     QTextEdit *resultsText = new QTextEdit;

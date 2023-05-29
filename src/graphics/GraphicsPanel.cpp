@@ -156,3 +156,9 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event) {
         update();
     }
 }
+
+void GraphicsPanel::clearPanel() {
+    points.clear();
+    lines.clear();
+    update();
+}
