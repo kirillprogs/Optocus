@@ -21,7 +21,8 @@ public:
     }
     enum class DrawMode {
         Point,
-        Line
+        Line,
+        Ray
     };
 
     void setDrawMode(DrawMode mode) {
@@ -49,6 +50,7 @@ private:
     int cellSize;
     QVector<QPoint> points;
     QVector<QPair<QPoint, QPoint>> lines;
+    QVector<QPair<QPoint, QPoint>> rays;
     QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;

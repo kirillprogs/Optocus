@@ -31,6 +31,9 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
         drawingWidget->addLens();
     });
     QPushButton *drawRayButton = new QPushButton("Намалювати промінь");
+    connect(drawRayButton, &QPushButton::clicked, [=]() {
+        drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Ray);
+    });
     QPushButton *drawObjectButton = new QPushButton("Намалювати тіло");
     connect(drawObjectButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Line);

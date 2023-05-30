@@ -96,6 +96,29 @@ void GraphicsPanel::paintGL()  {
         painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
     }
 
+    // all drawn rays
+    for (const auto& ray : rays) {
+        int scaledX1 = centerX + (ray.first.x() - centerX) * scaleFactor;
+        int scaledY1 = centerY + (ray.first.y() - centerY) * scaleFactor;
+        int scaledX2 = centerX + (ray.second.x() - centerX) * scaleFactor;
+        int scaledY2 = centerY + (ray.second.y() - centerY) * scaleFactor;
+
+        // arrow for ray
+        int arrowLength = 10;
+        int dx = scaledX2 - scaledX1;
+        int dy = scaledY2 - scaledY1;
+        double angle = atan2(dy, dx);
+        int arrowX1 = scaledX2 - arrowLength * cos(angle + M_PI / 4);
+        int arrowY1 = scaledY2 - arrowLength * sin(angle + M_PI / 4);
+        int arrowX2 = scaledX2 - arrowLength * cos(angle - M_PI / 4);
+        int arrowY2 = scaledY2 - arrowLength * sin(angle - M_PI / 4);
+
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX1, arrowY1));
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX2, arrowY2));
+    }
+
     // TODO: if Lens != NULL ?????
     if (lensPower != 0) {
         QPen penLens(QColor("#457B9D"));
@@ -160,12 +183,15 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
         if (drawMode == DrawMode::Point) {
             points.push_back(pos);
         }
-        else if (drawMode == DrawMode::Line) {
+        else if (drawMode == DrawMode::Line || drawMode == DrawMode::Ray) {
             if (!startPointSet) {
                 startPoint = pos;
                 startPointSet = true;
             } else { // if double click - draw line
-                lines.emplace_back(startPoint, pos);
+                if(drawMode == DrawMode::Line)
+                    lines.emplace_back(startPoint, pos);
+                else
+                    rays.emplace_back(startPoint, pos);
                 startPointSet = false;
             }
         }
