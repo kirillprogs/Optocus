@@ -11,6 +11,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QFileDialog>
+#include <QInputDialog>
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -29,6 +30,9 @@ public:
     void clearPanel();
 
     void saveModel();
+
+    void addLens();
+
 protected:
     float scaleFactor;
     void initializeGL() override;
@@ -37,6 +41,10 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 private:
+    // TODO: replace with Lens (int future - list of Lenses)
+    double lensPower = 0.0f;
+    double focalLengthFront = 0.0f;
+    double focalLengthBack = 0.0f;
     QPixmap pixmap;
     int cellSize;
     QVector<QPoint> points;
@@ -46,7 +54,7 @@ private:
     DrawMode drawMode = DrawMode::Point;
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
-    QPoint getCoordinates(double x1, double y1, double x2, double y2);
+    QPoint getCoordinates(double x, double y);
 };
 
 

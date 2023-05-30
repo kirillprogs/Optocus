@@ -44,6 +44,7 @@ void GraphicsPanel::paintGL()  {
     int maxWidth = 3*width;
     int maxHeight = 3*height;
 
+    // drawing cells
     cellSize = height / 30;
     int allCellsX = maxWidth / cellSize;
     int midCellsX = width / cellSize / 2;
@@ -67,6 +68,7 @@ void GraphicsPanel::paintGL()  {
         painter.drawLine(0, y, width, y);
     }
 
+    // optical axis
     penSystem.setColor(QColor(29, 53, 87));
     penSystem.setWidth(3);
     painter.setPen(penSystem);
@@ -77,6 +79,7 @@ void GraphicsPanel::paintGL()  {
     penObjects.setWidth(5);
     painter.setPen(penObjects);
 
+    // all drawn points
     for (const auto& point : points) {
         int scaledX = centerX + (point.x() - centerX) * scaleFactor;
         int scaledY = centerY + (point.y() - centerY) * scaleFactor;
@@ -84,12 +87,48 @@ void GraphicsPanel::paintGL()  {
     }
     penObjects.setWidth(2);
     painter.setPen(penObjects);
+    // all drawn lines
     for (const auto& line : lines) {
         int scaledX1 = centerX + (line.first.x() - centerX) * scaleFactor;
         int scaledY1 = centerY + (line.first.y() - centerY) * scaleFactor;
         int scaledX2 = centerX + (line.second.x() - centerX) * scaleFactor;
         int scaledY2 = centerY + (line.second.y() - centerY) * scaleFactor;
         painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+    }
+
+    // TODO: if Lens != NULL ?????
+    if (lensPower != 0) {
+        QPen penLens(QColor("#457B9D"));
+        penLens.setWidth(3);
+        painter.setPen(penLens);
+
+        int lensHeight = this->height() / 2;
+        int lensWidth = cellSize * 2;
+
+        int lensTop = centerY - lensHeight / 2;
+        int lensBottom = centerY + lensHeight / 2;
+
+        bool isConv = lensPower > 0;
+
+        painter.drawLine(centerX - lensWidth / 2, lensTop, centerX, lensTop + (isConv ? -10 : 10));
+        painter.drawLine(centerX, lensTop + (isConv ? -10 : 10), centerX + lensWidth / 2, lensTop);
+
+        painter.drawLine(centerX - lensWidth / 2, lensBottom, centerX, lensBottom + (isConv ? 10 : -10));
+        painter.drawLine(centerX, lensBottom + (isConv ? 10 : -10), centerX + lensWidth / 2, lensBottom);
+
+        painter.drawLine(centerX, lensTop, centerX, lensBottom);
+    }
+
+    if (focalLengthFront != 0 && focalLengthBack != 0) {
+        QPen penFoci(QColor("#E63946"));
+        penFoci.setWidth(5);
+        painter.setPen(penFoci);
+
+        QPoint front = getCoordinates(focalLengthFront, 0);
+        QPoint back = getCoordinates(focalLengthBack, 0);
+
+        painter.drawPoint(front);
+        painter.drawPoint(back);
     }
 
     painter.end();
@@ -181,5 +220,31 @@ void GraphicsPanel::saveModel() {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("Images (*.png *.xpm *.jpg)"));
     if (!filePath.isEmpty()) {
         pixmap.save(filePath);
+    }
+}
+
+// TODO: args Point
+QPoint GraphicsPanel::getCoordinates(double x, double y) {
+    int centerX = width() / 2;
+    int centerY = height() / 2;
+    int newX = (static_cast<int>(x)*cellSize + centerX); // TODO fix for all scales
+    int newY = (static_cast<int>(y)*cellSize + centerY);
+    return QPoint(newX, newY);
+}
+
+void GraphicsPanel::addLens() {
+    bool ok;
+    float power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
+    if (ok) {
+        lensPower = power;
+        // TODO change code to add Lens
+        if (lensPower != 0.0f) {
+            focalLengthFront = qAbs(1 / lensPower);
+            focalLengthBack = -focalLengthFront;
+        } else {
+            focalLengthFront = 0.0f;
+            focalLengthBack = 0.0f;
+        }
+        update();
     }
 }

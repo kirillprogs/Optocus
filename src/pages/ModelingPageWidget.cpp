@@ -27,6 +27,9 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     buttonPanelLayout->setContentsMargins(0, 0, 0, 0);
 
     QPushButton *addLensButton = new QPushButton("Додати лінзу");
+    connect(addLensButton, &QPushButton::clicked, [=]() {
+        drawingWidget->addLens();
+    });
     QPushButton *drawRayButton = new QPushButton("Намалювати промінь");
     QPushButton *drawObjectButton = new QPushButton("Намалювати тіло");
     connect(drawObjectButton, &QPushButton::clicked, [=]() {
