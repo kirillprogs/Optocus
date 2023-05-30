@@ -10,7 +10,11 @@ double Segment::getCanonicalC() const {
 }
 
 Point Segment::projection(Point &point) const {
-    // TODO write good projection function
+    double a = getCanonicalA();
+    double b = getCanonicalB();
+    double c = getCanonicalC();
+    return Point((b * (b * point.x() - a * point.y()) - a * c) / (a * a + b * b),
+                 (a * (-b * point.x() + a * point.y() - b * c)) / (a * a + b * b));
 }
 
 Point Segment::intersection(const Segment &o) const
