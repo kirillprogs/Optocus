@@ -16,42 +16,20 @@ find_package(Qt6 COMPONENTS
         OpenGL
         REQUIRED)
 
-include_directories(Optocus include)
-add_executable(Optocus src/main.cpp
-        include/calculating/Lens.h
-        include/calculating/OpticalSystem.h
-        include/calculating/Object.h
-        include/calculating/geometry/Point.h
-        include/calculating/geometry/Ray.h
-        src/calculating/Lens.cpp
-        src/calculating/Object.cpp
-        src/calculating/geometry/Ray.cpp
-        include/calculating/OpticalDevice.h
-        include/calculating/geometry/Segment.h
-        src/calculating/geometry/Segment.cpp
-        include/calculating/Image.h
-        src/calculating/Image.cpp
-        src/calculating/geometry/Point.cpp
-        src/calculating/OpticalSystem.cpp
-        src/pages/gui_logic/pages.cpp
-        src/pages/gui_logic/pages.h
-        src/pages/gui_logic/Pages.ui
-        src/pages/gui_logic/pages.h
-        src/pages/gui_logic/pages.h
-        src/pages/HomePageWidget.cpp
-        src/pages/HomePageWidget.h
-        src/pages/ModelingPageWidget.cpp
-        src/pages/ModelingPageWidget.h
-        src/pages/CalculatorPageWidget.cpp
-        src/pages/CalculatorPageWidget.h
-        src/pages/DevicesPageWidget.cpp
-        src/pages/DevicesPageWidget.h
-        src/pages/PhenomPageWidget.cpp
-        src/pages/PhenomPageWidget.h
-        src/style/OptStyle.cpp
-        src/style/OptStyle.h
-        src/graphics/GraphicsPanel.cpp
-        src/graphics/GraphicsPanel.h)
+include_directories(Optocus include /usr/include/)
+
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+
+file(GLOB_RECURSE SOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.c
+        ${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+file(GLOB_RECURSE HEADER_FILES
+        ${CMAKE_SOURCE_DIR}/include/*.h
+        ${CMAKE_SOURCE_DIR}/include/*.hpp)
+
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 target_link_libraries(Optocus
         Qt::Core
@@ -59,13 +37,10 @@ target_link_libraries(Optocus
         Qt::Widgets
         Qt::OpenGL
         Qt6::OpenGLWidgets
-        opengl32
+        OpenGL::GL
+        GLUT::GLUT
         )
 
-include_directories(Rectangle test/src test/include)
-add_executable(Rectangle test/src/rectangle.cpp test/include/rectangle.h)
-target_link_libraries(Rectangle
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-        )
+if (WIN32)
+    target_link_libraries(Octopus opengl32)
+endif()

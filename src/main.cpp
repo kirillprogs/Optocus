@@ -1,9 +1,6 @@
 #pragma comment (lib, "opengl32.lib")
 #include <QApplication>
 #include <QIcon>
-#include <GL\gl.h>
-#include <gl\glu.h>
-#include <gl\glaux.h>
 #include "style/OptStyle.h"
 #include "pages/gui_logic/pages.h"
 
