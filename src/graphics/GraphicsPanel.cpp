@@ -25,8 +25,6 @@ void GraphicsPanel::paintGL()  {
 
     int width = this->width();
     int height = this->height();
-    qDebug() << "width=" << width;
-    qDebug() << "height=" << height;
 
     int centerX = width / 2;
     int centerY = height / 2;
@@ -76,21 +74,22 @@ void GraphicsPanel::paintGL()  {
     painter.drawLine(0, optAxis, width, optAxis);
 
     QPen penObjects(Qt::black);
-    penObjects.setWidth(2);
+    penObjects.setWidth(5);
     painter.setPen(penObjects);
 
     for (const auto& point : points) {
         int scaledX = centerX + (point.x() - centerX) * scaleFactor;
         int scaledY = centerY + (point.y() - centerY) * scaleFactor;
-        painter.drawPoint(QPointF(scaledX, scaledY));
+        painter.drawPoint(QPoint(scaledX, scaledY));
     }
-
+    penObjects.setWidth(2);
+    painter.setPen(penObjects);
     for (const auto& line : lines) {
         int scaledX1 = centerX + (line.first.x() - centerX) * scaleFactor;
         int scaledY1 = centerY + (line.first.y() - centerY) * scaleFactor;
         int scaledX2 = centerX + (line.second.x() - centerX) * scaleFactor;
         int scaledY2 = centerY + (line.second.y() - centerY) * scaleFactor;
-        painter.drawLine(QPointF(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
     }
 
     painter.end();
@@ -103,13 +102,21 @@ void GraphicsPanel::paintGL()  {
 void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         // get position
-        QPointF pos = event->position();
-        int centerX = this->width() / 2;
-        int centerY = this->height() / 2;
-        int scaledX = (centerX + (pos.x() - centerX) / scaleFactor);
-        int scaledY = (centerY + (pos.y() - centerY) / scaleFactor);
-        pos.setX(scaledX);
-        pos.setY(scaledY);
+        QPoint pos = event->pos();
+        int centerX = width() / 2;
+        int centerY = height() / 2;
+
+        // TODO fix for all scales
+        float scaledCellSize = static_cast<float>(cellSize) * scaleFactor;
+        int cellX = qRound((pos.x() - centerX) / scaledCellSize);
+        int cellY = qRound((pos.y() - centerY) / scaledCellSize);
+        int x = centerX + cellX * scaledCellSize;
+        int y = centerY + cellY * scaledCellSize;
+
+        // int scaledX = (centerX + (pos.x() - centerX) / scaleFactor);
+        // int scaledY = (centerY + (pos.y() - centerY) / scaleFactor);
+        pos.setX(x);
+        pos.setY(y);
 
         if (drawMode == DrawMode::Point) {
             points.push_back(pos);
@@ -141,6 +148,7 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
                 scaleFactor /= 1.2;
                 if (scaleFactor < 0.4)
                     scaleFactor = 0.4;
+                qDebug() << "scale:" << scaleFactor;
                 update();
                 break;
             default:

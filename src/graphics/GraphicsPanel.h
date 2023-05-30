@@ -39,13 +39,14 @@ protected:
 private:
     QPixmap pixmap;
     int cellSize;
-    QVector<QPointF> points;
-    QVector<QPair<QPointF, QPointF>> lines;
-    QPointF startPoint;
+    QVector<QPoint> points;
+    QVector<QPair<QPoint, QPoint>> lines;
+    QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
+    QPoint getCoordinates(double x1, double y1, double x2, double y2);
 };
 
 
