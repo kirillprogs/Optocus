@@ -170,13 +170,10 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
 
         // TODO fix for all scales
         float scaledCellSize = static_cast<float>(cellSize) * scaleFactor;
-        int cellX = qRound((pos.x() - centerX) / scaledCellSize);
-        int cellY = qRound((pos.y() - centerY) / scaledCellSize);
-        int x = centerX + cellX * scaledCellSize;
-        int y = centerY + cellY * scaledCellSize;
-
-        // int scaledX = (centerX + (pos.x() - centerX) / scaleFactor);
-        // int scaledY = (centerY + (pos.y() - centerY) / scaleFactor);
+        int cellX = qRound(static_cast<float>(pos.x() - centerX) / scaledCellSize);
+        int cellY = qRound(static_cast<float>(pos.y() - centerY) / scaledCellSize);
+        int x = centerX + cellX * cellSize;
+        int y = centerY + cellY * cellSize;
         pos.setX(x);
         pos.setY(y);
 
@@ -225,8 +222,8 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
 
 void GraphicsPanel::wheelEvent(QWheelEvent *event) {
     if (event->modifiers() == Qt::ControlModifier) {
-        float numDegrees = event->angleDelta().y() / 8.0f;
-        float numSteps = numDegrees / 15.0f;
+        int numDegrees = event->angleDelta().y() / 8;
+        float numSteps = static_cast<float>(numDegrees) / 15.0f;
         scaleFactor *= qPow(1.125f, numSteps);
         if (scaleFactor > 3.0)
             scaleFactor = 3.0;
@@ -239,6 +236,7 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event) {
 void GraphicsPanel::clearPanel() {
     points.clear();
     lines.clear();
+    rays.clear();
     update();
 }
 
@@ -253,14 +251,14 @@ void GraphicsPanel::saveModel() {
 QPoint GraphicsPanel::getCoordinates(double x, double y) {
     int centerX = width() / 2;
     int centerY = height() / 2;
-    int newX = (static_cast<int>(x)*cellSize + centerX); // TODO fix for all scales
-    int newY = (static_cast<int>(y)*cellSize + centerY);
+    int newX = (static_cast<int>(x*cellSize * scaleFactor) + centerX);
+    int newY = (static_cast<int>(y*cellSize * scaleFactor) + centerY);
     return QPoint(newX, newY);
 }
 
 void GraphicsPanel::addLens() {
     bool ok;
-    float power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
+    double power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
     if (ok) {
         lensPower = power;
         // TODO change code to add Lens
