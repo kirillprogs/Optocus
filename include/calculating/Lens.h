@@ -33,9 +33,9 @@ public:
     // converging or diffusing
     bool isConverging() const;
 
-    // get distance to image from distance to object
+    // get distance to image from distance to _object
     double getDistanceToImage(double d) const;
-    // get distance to object from distance to image
+    // get distance to _object from distance to image
     double getDistanceToObject(double f) const;
 
     static double getImgHeight(double h, double f, double d);
