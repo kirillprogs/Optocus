@@ -25,8 +25,6 @@ void GraphicsPanel::paintGL()  {
 
     int width = this->width();
     int height = this->height();
-    qDebug() << "width=" << width;
-    qDebug() << "height=" << height;
 
     int centerX = width / 2;
     int centerY = height / 2;
@@ -46,6 +44,7 @@ void GraphicsPanel::paintGL()  {
     int maxWidth = 3*width;
     int maxHeight = 3*height;
 
+    // drawing cells
     cellSize = height / 30;
     int allCellsX = maxWidth / cellSize;
     int midCellsX = width / cellSize / 2;
@@ -69,6 +68,7 @@ void GraphicsPanel::paintGL()  {
         painter.drawLine(0, y, width, y);
     }
 
+    // optical axis
     penSystem.setColor(QColor(29, 53, 87));
     penSystem.setWidth(3);
     painter.setPen(penSystem);
@@ -76,21 +76,82 @@ void GraphicsPanel::paintGL()  {
     painter.drawLine(0, optAxis, width, optAxis);
 
     QPen penObjects(Qt::black);
-    penObjects.setWidth(2);
+    penObjects.setWidth(5);
     painter.setPen(penObjects);
 
+    // all drawn points
     for (const auto& point : points) {
         int scaledX = centerX + (point.x() - centerX) * scaleFactor;
         int scaledY = centerY + (point.y() - centerY) * scaleFactor;
-        painter.drawPoint(QPointF(scaledX, scaledY));
+        painter.drawPoint(QPoint(scaledX, scaledY));
     }
-
+    penObjects.setWidth(2);
+    painter.setPen(penObjects);
+    // all drawn lines
     for (const auto& line : lines) {
         int scaledX1 = centerX + (line.first.x() - centerX) * scaleFactor;
         int scaledY1 = centerY + (line.first.y() - centerY) * scaleFactor;
         int scaledX2 = centerX + (line.second.x() - centerX) * scaleFactor;
         int scaledY2 = centerY + (line.second.y() - centerY) * scaleFactor;
-        painter.drawLine(QPointF(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+    }
+
+    // all drawn rays
+    for (const auto& ray : rays) {
+        int scaledX1 = centerX + (ray.first.x() - centerX) * scaleFactor;
+        int scaledY1 = centerY + (ray.first.y() - centerY) * scaleFactor;
+        int scaledX2 = centerX + (ray.second.x() - centerX) * scaleFactor;
+        int scaledY2 = centerY + (ray.second.y() - centerY) * scaleFactor;
+
+        // arrow for ray
+        int arrowLength = 10;
+        int dx = scaledX2 - scaledX1;
+        int dy = scaledY2 - scaledY1;
+        double angle = atan2(dy, dx);
+        int arrowX1 = scaledX2 - arrowLength * cos(angle + M_PI / 4);
+        int arrowY1 = scaledY2 - arrowLength * sin(angle + M_PI / 4);
+        int arrowX2 = scaledX2 - arrowLength * cos(angle - M_PI / 4);
+        int arrowY2 = scaledY2 - arrowLength * sin(angle - M_PI / 4);
+
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX1, arrowY1));
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX2, arrowY2));
+    }
+
+    // TODO: if Lens != NULL ?????
+    if (lensPower != 0) {
+        QPen penLens(QColor("#457B9D"));
+        penLens.setWidth(3);
+        painter.setPen(penLens);
+
+        int lensHeight = this->height() / 2;
+        int lensWidth = cellSize * 2;
+
+        int lensTop = centerY - lensHeight / 2;
+        int lensBottom = centerY + lensHeight / 2;
+
+        bool isConv = lensPower > 0;
+
+        painter.drawLine(centerX - lensWidth / 2, lensTop, centerX, lensTop + (isConv ? -10 : 10));
+        painter.drawLine(centerX, lensTop + (isConv ? -10 : 10), centerX + lensWidth / 2, lensTop);
+
+        painter.drawLine(centerX - lensWidth / 2, lensBottom, centerX, lensBottom + (isConv ? 10 : -10));
+        painter.drawLine(centerX, lensBottom + (isConv ? 10 : -10), centerX + lensWidth / 2, lensBottom);
+
+        painter.drawLine(centerX, lensTop, centerX, lensBottom);
+    }
+
+    if (focalLengthFront != 0 && focalLengthBack != 0) {
+        QPen penFoci(QColor("#E63946"));
+        penFoci.setWidth(5);
+        painter.setPen(penFoci);
+
+        QPoint front = getCoordinates(focalLengthFront, 0);
+        QPoint back = getCoordinates(focalLengthBack, 0);
+
+        painter.drawPoint(front);
+        painter.drawPoint(back);
     }
 
     painter.end();
@@ -103,23 +164,31 @@ void GraphicsPanel::paintGL()  {
 void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         // get position
-        QPointF pos = event->position();
-        int centerX = this->width() / 2;
-        int centerY = this->height() / 2;
-        int scaledX = (centerX + (pos.x() - centerX) / scaleFactor);
-        int scaledY = (centerY + (pos.y() - centerY) / scaleFactor);
-        pos.setX(scaledX);
-        pos.setY(scaledY);
+        QPoint pos = event->pos();
+        int centerX = width() / 2;
+        int centerY = height() / 2;
+
+        // TODO fix for all scales
+        float scaledCellSize = static_cast<float>(cellSize) * scaleFactor;
+        int cellX = qRound(static_cast<float>(pos.x() - centerX) / scaledCellSize);
+        int cellY = qRound(static_cast<float>(pos.y() - centerY) / scaledCellSize);
+        int x = centerX + cellX * cellSize;
+        int y = centerY + cellY * cellSize;
+        pos.setX(x);
+        pos.setY(y);
 
         if (drawMode == DrawMode::Point) {
             points.push_back(pos);
         }
-        else if (drawMode == DrawMode::Line) {
+        else if (drawMode == DrawMode::Line || drawMode == DrawMode::Ray) {
             if (!startPointSet) {
                 startPoint = pos;
                 startPointSet = true;
             } else { // if double click - draw line
-                lines.emplace_back(startPoint, pos);
+                if(drawMode == DrawMode::Line)
+                    lines.emplace_back(startPoint, pos);
+                else
+                    rays.emplace_back(startPoint, pos);
                 startPointSet = false;
             }
         }
@@ -141,6 +210,7 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
                 scaleFactor /= 1.2;
                 if (scaleFactor < 0.4)
                     scaleFactor = 0.4;
+                qDebug() << "scale:" << scaleFactor;
                 update();
                 break;
             default:
@@ -152,8 +222,8 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
 
 void GraphicsPanel::wheelEvent(QWheelEvent *event) {
     if (event->modifiers() == Qt::ControlModifier) {
-        float numDegrees = event->angleDelta().y() / 8.0f;
-        float numSteps = numDegrees / 15.0f;
+        int numDegrees = event->angleDelta().y() / 8;
+        float numSteps = static_cast<float>(numDegrees) / 15.0f;
         scaleFactor *= qPow(1.125f, numSteps);
         if (scaleFactor > 3.0)
             scaleFactor = 3.0;
@@ -166,6 +236,7 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event) {
 void GraphicsPanel::clearPanel() {
     points.clear();
     lines.clear();
+    rays.clear();
     update();
 }
 
@@ -173,5 +244,31 @@ void GraphicsPanel::saveModel() {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("Images (*.png *.xpm *.jpg)"));
     if (!filePath.isEmpty()) {
         pixmap.save(filePath);
+    }
+}
+
+// TODO: args Point
+QPoint GraphicsPanel::getCoordinates(double x, double y) {
+    int centerX = width() / 2;
+    int centerY = height() / 2;
+    int newX = (static_cast<int>(x*cellSize * scaleFactor) + centerX);
+    int newY = (static_cast<int>(y*cellSize * scaleFactor) + centerY);
+    return QPoint(newX, newY);
+}
+
+void GraphicsPanel::addLens() {
+    bool ok;
+    double power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
+    if (ok) {
+        lensPower = power;
+        // TODO change code to add Lens
+        if (lensPower != 0.0f) {
+            focalLengthFront = qAbs(1 / lensPower);
+            focalLengthBack = -focalLengthFront;
+        } else {
+            focalLengthFront = 0.0f;
+            focalLengthBack = 0.0f;
+        }
+        update();
     }
 }
