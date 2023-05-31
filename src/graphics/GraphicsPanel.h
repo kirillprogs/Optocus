@@ -12,6 +12,7 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QInputDialog>
+#include "OpticalController.h"
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -25,6 +26,7 @@ public:
 private:
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
+    static const int CELL_NUM = 30;
     // TODO: replace with Lens (int future - list of Lenses)
     double lensPower = 0.0f;
     double focalLengthFront = 0.0f;
@@ -37,14 +39,11 @@ private:
     QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;
-
-protected:
+    OpticalController *controller;
     float scaleFactor;
 
 public:
-    GraphicsPanel(QWidget* parent = nullptr) : QOpenGLWidget(parent) {
-            setMouseTracking(true);
-    }
+    explicit GraphicsPanel(QWidget* parent = nullptr);
 
     void setDrawMode(DrawMode mode) {
         drawMode = mode;
@@ -54,7 +53,7 @@ public:
     void saveModel();
     void addLens();
 
-protected:
+private:
     void initializeGL() override;
     void paintGL() override;
     void mousePressEvent(QMouseEvent* event) override;

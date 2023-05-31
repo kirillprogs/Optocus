@@ -1,5 +1,12 @@
 #include "GraphicsPanel.h"
 
+GraphicsPanel::GraphicsPanel(QWidget* parent)
+        : QOpenGLWidget(parent), controller(OpticalController::instance())
+        , cellSize(0), scaleFactor(1.f)
+{
+    setMouseTracking(true);
+}
+
 void GraphicsPanel::initializeGL()
 {
     setMaximumWidth(WIDTH);
@@ -40,7 +47,7 @@ void GraphicsPanel::paintGL()
     int maxHeight = 3*height();
 
     // drawing cells
-    cellSize = height() / 30;
+    cellSize = height() / CELL_NUM;
     int allCellsX = maxWidth / cellSize;
     int midCellsX = width() / cellSize / 2;
     for (int i = midCellsX; i > midCellsX-allCellsX/2; i--) {
@@ -259,7 +266,9 @@ QPoint GraphicsPanel::getCoordinates(double x, double y)
 void GraphicsPanel::addLens()
 {
     bool ok;
-    double power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
+    double power = QInputDialog::getDouble(this, tr("Add Lens"),
+                                           tr("Enter lens power:"),
+                                           0.0, -100.0, 100.0, 2, &ok);
     if (ok) {
         lensPower = power;
         // TODO change code to add Lens

@@ -1,8 +1,16 @@
-//
-// Created by kirill on 31/05/23.
-//
+#ifndef OPTOCUS_OPTICAL_CONTROLLER_H
+#define OPTOCUS_OPTICAL_CONTROLLER_H
 
-#ifndef OPTOCUS_OPTICALCONTROLLER_H
-#define OPTOCUS_OPTICALCONTROLLER_H
+class OpticalController {
 
-#endif //OPTOCUS_OPTICALCONTROLLER_H
+    static OpticalController *_instance;
+
+public:
+    static OpticalController *instance();
+private:
+    OpticalController() { _instance = 0; }
+public:
+
+};
+
+#endif //OPTOCUS_OPTICAL_CONTROLLER_H
