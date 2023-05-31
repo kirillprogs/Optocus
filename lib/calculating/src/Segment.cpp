@@ -1,5 +1,5 @@
 #include <cmath>
-#include "calculating/geometry/Segment.h"
+#include "Segment.h"
 
 /* (y - y1) * (x2 - x1) = (y2 - y1) * (x - x1)
  * y * (x2 - x1) + x * (y1 - y2) = y1 * (x2 - x1) + x1 * (y1 - y2) */

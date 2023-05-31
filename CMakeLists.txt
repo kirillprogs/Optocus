@@ -16,20 +16,20 @@ find_package(Qt6 COMPONENTS
         OpenGL
         REQUIRED)
 
-include_directories(Optocus include /usr/include/)
-
-find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+
+add_subdirectory(lib/calculating)
+
+file(GLOB_RECURSE LIB_INCLUDE_DIRS LIST_DIRECTORIES true
+        ${CMAKE_SOURCE_DIR}/lib/*/include)
+
+include_directories(Optocus ${LIB_INCLUDE_DIRS})
 
 file(GLOB_RECURSE SOURCE_FILES
         ${CMAKE_SOURCE_DIR}/src/*.c
         ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
-file(GLOB_RECURSE HEADER_FILES
-        ${CMAKE_SOURCE_DIR}/include/*.h
-        ${CMAKE_SOURCE_DIR}/include/*.hpp)
-
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_link_libraries(Optocus
         Qt::Core
@@ -39,8 +39,9 @@ target_link_libraries(Optocus
         Qt6::OpenGLWidgets
         OpenGL::GL
         GLUT::GLUT
+        calculating
         )
 
 if (WIN32)
-    target_link_libraries(Octopus opengl32)
+    target_link_libraries(Optocus opengl32)
 endif()

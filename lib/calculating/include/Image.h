@@ -2,8 +2,8 @@
 #define OPTOCUS_IMAGE_H
 
 #include <list>
-#include "geometry/Point.h"
-#include "geometry/Segment.h"
+#include "Point.h"
+#include "Segment.h"
 
 using std::list;
 

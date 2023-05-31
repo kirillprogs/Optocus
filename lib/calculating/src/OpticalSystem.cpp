@@ -1,4 +1,4 @@
-#include "calculating/OpticalSystem.h"
+#include "OpticalSystem.h"
 
 list<Image<Point>> OpticalSystem::evaluate_object() {
    if (!hasObject()) return list<Image<Point>>();

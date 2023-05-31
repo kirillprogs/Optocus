@@ -1,4 +1,4 @@
-#include "calculating/Lens.h"
+#include "Lens.h"
 
 Lens::Lens(double opt_pow, double x, double height)
         : _opt_pow(opt_pow), _x(x), _height(height) { }

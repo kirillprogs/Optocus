@@ -1,10 +1,7 @@
-//
-// Created by Lilly on 28.05.2023.
-//
-
 #include "GraphicsPanel.h"
 
-void GraphicsPanel::initializeGL() {
+void GraphicsPanel::initializeGL()
+{
     setMaximumWidth(WIDTH);
     setMaximumHeight(HEIGHT);
     this->setFocusPolicy(Qt::StrongFocus);
@@ -12,7 +9,8 @@ void GraphicsPanel::initializeGL() {
     initializeOpenGLFunctions();
 }
 
-void GraphicsPanel::paintGL()  {
+void GraphicsPanel::paintGL()
+{
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
@@ -23,11 +21,8 @@ void GraphicsPanel::paintGL()  {
     QPainter painter(&pixmap);
     painter.begin(this);
 
-    int width = this->width();
-    int height = this->height();
-
-    int centerX = width / 2;
-    int centerY = height / 2;
+    int centerX = width() / 2;
+    int centerY = height() / 2;
     float offsetX = static_cast<float>(centerX) * (1.0f - scaleFactor);
     float offsetY = static_cast<float>(centerY) * (1.0f - scaleFactor);
 
@@ -35,45 +30,45 @@ void GraphicsPanel::paintGL()  {
     glScalef(scaleFactor, scaleFactor, 1.0f);
     glTranslatef(-offsetX, -offsetY, 0.0f);
 
-    painter.fillRect(0, 0, width, height, QColor(241, 250, 238));
+    painter.fillRect(0, 0, width(), height(), QColor(241, 250, 238));
 
     QPen penSystem(QColor(29, 53, 87, 100));
     penSystem.setWidth(1);
     painter.setPen(penSystem);
 
-    int maxWidth = 3*width;
-    int maxHeight = 3*height;
+    int maxWidth = 3*width();
+    int maxHeight = 3*height();
 
     // drawing cells
-    cellSize = height / 30;
+    cellSize = height() / 30;
     int allCellsX = maxWidth / cellSize;
-    int midCellsX = width / cellSize / 2;
+    int midCellsX = width() / cellSize / 2;
     for (int i = midCellsX; i > midCellsX-allCellsX/2; i--) {
         int x = centerX + (i * cellSize - centerX) * scaleFactor;
-        painter.drawLine(x, 0, x, height);
+        painter.drawLine(x, 0, x, height());
     }
     for (int i = midCellsX; i < allCellsX; i++) {
         int x = centerX + (i * cellSize - centerX) * scaleFactor;
-        painter.drawLine(x, 0, x, height);
+        painter.drawLine(x, 0, x, height());
     }
 
     int allCellsY = maxHeight / cellSize;
-    int midCellsY = height / cellSize / 2;
+    int midCellsY = height() / cellSize / 2;
     for (int j = midCellsY; j > midCellsY - allCellsY/2; j--) {
         int y = centerY + (j * cellSize - centerY) * scaleFactor;
-        painter.drawLine(0, y, width, y);
+        painter.drawLine(0, y, width(), y);
     }
     for (int j = midCellsY; j < allCellsY; j++) {
         int y = centerY + (j * cellSize - centerY) * scaleFactor;
-        painter.drawLine(0, y, width, y);
+        painter.drawLine(0, y, width(), y);
     }
 
     // optical axis
     penSystem.setColor(QColor(29, 53, 87));
     penSystem.setWidth(3);
     painter.setPen(penSystem);
-    int optAxis = static_cast<int>(height / 2);
-    painter.drawLine(0, optAxis, width, optAxis);
+    int optAxis = static_cast<int>(height() / 2);
+    painter.drawLine(0, optAxis, width(), optAxis);
 
     QPen penObjects(Qt::black);
     penObjects.setWidth(5);
@@ -125,7 +120,7 @@ void GraphicsPanel::paintGL()  {
         penLens.setWidth(3);
         painter.setPen(penLens);
 
-        int lensHeight = this->height() / 2;
+        int lensHeight = height() / 2;
         int lensWidth = cellSize * 2;
 
         int lensTop = centerY - lensHeight / 2;
@@ -197,7 +192,8 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
+void GraphicsPanel::keyPressEvent(QKeyEvent *event)
+{
     if(event->modifiers() == (Qt::ControlModifier | Qt::KeypadModifier)) {
         switch(event->key()) {
             case Qt::Key_Plus:
@@ -220,7 +216,8 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void GraphicsPanel::wheelEvent(QWheelEvent *event) {
+void GraphicsPanel::wheelEvent(QWheelEvent *event)
+{
     if (event->modifiers() == Qt::ControlModifier) {
         int numDegrees = event->angleDelta().y() / 8;
         float numSteps = static_cast<float>(numDegrees) / 15.0f;
@@ -233,14 +230,16 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event) {
     }
 }
 
-void GraphicsPanel::clearPanel() {
+void GraphicsPanel::clearPanel()
+{
     points.clear();
     lines.clear();
     rays.clear();
     update();
 }
 
-void GraphicsPanel::saveModel() {
+void GraphicsPanel::saveModel()
+{
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("Images (*.png *.xpm *.jpg)"));
     if (!filePath.isEmpty()) {
         pixmap.save(filePath);
@@ -248,15 +247,17 @@ void GraphicsPanel::saveModel() {
 }
 
 // TODO: args Point
-QPoint GraphicsPanel::getCoordinates(double x, double y) {
+QPoint GraphicsPanel::getCoordinates(double x, double y)
+{
     int centerX = width() / 2;
     int centerY = height() / 2;
     int newX = (static_cast<int>(x*cellSize * scaleFactor) + centerX);
     int newY = (static_cast<int>(y*cellSize * scaleFactor) + centerY);
-    return QPoint(newX, newY);
+    return { newX, newY };
 }
 
-void GraphicsPanel::addLens() {
+void GraphicsPanel::addLens()
+{
     bool ok;
     double power = QInputDialog::getDouble(this, tr("Add Lens"), tr("Enter lens power:"), 0.0, -100.0, 100.0, 2, &ok);
     if (ok) {

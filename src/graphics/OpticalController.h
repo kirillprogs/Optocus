@@ -1,0 +1,8 @@
+//
+// Created by kirill on 31/05/23.
+//
+
+#ifndef OPTOCUS_OPTICALCONTROLLER_H
+#define OPTOCUS_OPTICALCONTROLLER_H
+
+#endif //OPTOCUS_OPTICALCONTROLLER_H

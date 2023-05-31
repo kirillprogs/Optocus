@@ -6,6 +6,8 @@
 #include <tuple>
 #include <list>
 #include "Lens.h"
+#include "Point.h"
+#include "Segment.h"
 
 using std::vector;
 using std::tuple;

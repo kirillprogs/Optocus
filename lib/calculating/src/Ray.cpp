@@ -1,4 +1,4 @@
-#include "calculating/geometry/Ray.h"
+#include "Ray.h"
 
 Ray::Ray(double x1, double y1, double x2, double y2) {
     if (x1 < x2) {

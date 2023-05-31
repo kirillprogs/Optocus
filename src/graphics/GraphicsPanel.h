@@ -16,32 +16,15 @@
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
 public:
-    GraphicsPanel(QWidget* parent = nullptr) : QOpenGLWidget(parent) {
-            setMouseTracking(true);
-    }
     enum class DrawMode {
         Point,
         Line,
         Ray
     };
 
-    void setDrawMode(DrawMode mode) {
-        drawMode = mode;
-    }
-    void clearPanel();
-
-    void saveModel();
-
-    void addLens();
-
-protected:
-    float scaleFactor;
-    void initializeGL() override;
-    void paintGL() override;
-    void mousePressEvent(QMouseEvent* event) override;
-    void keyPressEvent(QKeyEvent *event) override;
-    void wheelEvent(QWheelEvent *event) override;
 private:
+    static const int WIDTH = 1200;
+    static const int HEIGHT = 720;
     // TODO: replace with Lens (int future - list of Lenses)
     double lensPower = 0.0f;
     double focalLengthFront = 0.0f;
@@ -54,10 +37,30 @@ private:
     QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;
-    static const int WIDTH = 1200;
-    static const int HEIGHT = 720;
+
+protected:
+    float scaleFactor;
+
+public:
+    GraphicsPanel(QWidget* parent = nullptr) : QOpenGLWidget(parent) {
+            setMouseTracking(true);
+    }
+
+    void setDrawMode(DrawMode mode) {
+        drawMode = mode;
+    }
+
+    void clearPanel();
+    void saveModel();
+    void addLens();
+
+protected:
+    void initializeGL() override;
+    void paintGL() override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
     QPoint getCoordinates(double x, double y);
 };
-
 
 #endif //OPTOCUS_GRAPHICSPANEL_H

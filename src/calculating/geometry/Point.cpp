@@ -1,1 +1,0 @@
-#include "calculating/geometry/Point.h"

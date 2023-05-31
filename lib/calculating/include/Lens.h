@@ -5,6 +5,8 @@
 #include <cmath>
 
 #include "Image.h"
+#include "Point.h"
+#include "Segment.h"
 
 using std::list;
 
