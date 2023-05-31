@@ -19,7 +19,6 @@ find_package(Qt6 COMPONENTS
 include_directories(Optocus include /usr/include/)
 
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES
         ${CMAKE_SOURCE_DIR}/src/*.c
@@ -38,9 +37,8 @@ target_link_libraries(Optocus
         Qt::OpenGL
         Qt6::OpenGLWidgets
         OpenGL::GL
-        GLUT::GLUT
         )
 
 if (WIN32)
-    target_link_libraries(Octopus opengl32)
+    target_link_libraries(Optocus opengl32)
 endif()
