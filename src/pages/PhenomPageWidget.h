@@ -6,6 +6,10 @@
 #define OPTOCUS_PHENOMPAGEWIDGET_H
 
 #include <QWidget>
+#include <QScrollBar>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QScrollArea>
 
 class PhenomPageWidget : public QWidget  {
 Q_OBJECT
