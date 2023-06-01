@@ -12,8 +12,8 @@ bool Lens::isConverging() const { return _opt_pow > 0; }
 double Lens::getDistanceToImage(double d) const { return 1 / (optPow() - 1 / d); }
 double Lens::getDistanceToObject(double f) const { return 1 / (optPow() - 1 / f); }
 
-double Lens::getImgHeight(double h, double f, double d) { return h * (f / d); }
-double Lens::getObjHeight(double H, double f, double d) { return H * (d / f); }
+double Lens::getImgHeight(double h, double f, double d) { return -h * (f / d); }
+double Lens::getObjHeight(double H, double f, double d) { return -H * (d / f); }
 
 double Lens::getOptPow(double d, double f) { return 1/d + 1/f; }
 

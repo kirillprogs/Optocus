@@ -50,46 +50,12 @@ void GraphicsPanel::paintGL()
     penObjects.setWidth(5);
     painter.setPen(penObjects);
 
-    // all drawn points
-    for (const auto& point : points) {
-        int scaledX = centerX() + (point.x() - centerX()) * scaleFactor;
-        int scaledY = centerY() + (point.y() - centerY()) * scaleFactor;
-        painter.drawPoint(QPoint(scaledX, scaledY));
+    if (controller->has_object()) {
+        draw_object(painter);
+        draw_images(painter);
+        draw_image_rays(painter);
     }
-    penObjects.setWidth(2);
-    painter.setPen(penObjects);
-    // all drawn lines
-    for (const auto& line : lines) {
-        int scaledX1 = centerX() + (line.first.x() - centerX()) * scaleFactor;
-        int scaledY1 = centerY() + (line.first.y() - centerY()) * scaleFactor;
-        int scaledX2 = centerX() + (line.second.x() - centerX()) * scaleFactor;
-        int scaledY2 = centerY() + (line.second.y() - centerY()) * scaleFactor;
-        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
-    }
-
-    // all drawn rays
-    for (const auto& ray : rays) {
-        int scaledX1 = centerX() + (ray.first.x() - centerX()) * scaleFactor;
-        int scaledY1 = centerY() + (ray.first.y() - centerY()) * scaleFactor;
-        int scaledX2 = centerX() + (ray.second.x() - centerX()) * scaleFactor;
-        int scaledY2 = centerY() + (ray.second.y() - centerY()) * scaleFactor;
-
-        // arrow for ray
-        int arrowLength = 10;
-        int dx = scaledX2 - scaledX1;
-        int dy = scaledY2 - scaledY1;
-        double angle = atan2(dy, dx);
-        int arrowX1 = scaledX2 - arrowLength * cos(angle + M_PI / 4);
-        int arrowY1 = scaledY2 - arrowLength * sin(angle + M_PI / 4);
-        int arrowX2 = scaledX2 - arrowLength * cos(angle - M_PI / 4);
-        int arrowY2 = scaledY2 - arrowLength * sin(angle - M_PI / 4);
-
-        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
-
-        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX1, arrowY1));
-        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX2, arrowY2));
-    }
-
+    draw_rays(painter);
     for (const Lens &lens : controller->get_lenses())
         draw_lens(lens, painter);
 
@@ -187,21 +153,68 @@ void GraphicsPanel::draw_axis(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_object(QPainter &painter) {
-
+    QPen penObjects(Qt::red);
+    penObjects.setWidth(6);
+    painter.setPen(penObjects);
+    Segment line = controller->get_object();
+    int scaledX1 = centerX() + line.start().x() * scaleFactor;
+    int scaledY1 = centerY() + line.start().y() * scaleFactor;
+    int scaledX2 = centerX() + line.end().x() * scaleFactor;
+    int scaledY2 = centerY() + line.end().y() * scaleFactor;
+    painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
 }
 
 void GraphicsPanel::draw_images(QPainter &painter) {
+    QPen penObjects(Qt::darkCyan);
+    penObjects.setWidth(4);
+    painter.setPen(penObjects);
     for (Segment line : controller->get_images()) {
-        int scaledX1 = centerX() + (line.start().x() - centerX()) * scaleFactor;
-        int scaledY1 = centerY() + (line.start().y() - centerY()) * scaleFactor;
-        int scaledX2 = centerX() + (line.end().x() - centerX()) * scaleFactor;
-        int scaledY2 = centerY() + (line.end().y() - centerY()) * scaleFactor;
+        int scaledX1 = centerX() + line.start().x() * scaleFactor;
+        int scaledY1 = centerY() + line.start().y() * scaleFactor;
+        int scaledX2 = centerX() + line.end().x() * scaleFactor;
+        int scaledY2 = centerY() + line.end().y() * scaleFactor;
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+    }
+}
+
+void GraphicsPanel::draw_image_rays(QPainter &painter) {
+    QPen penObjects(Qt::black);
+    penObjects.setWidth(2);
+    painter.setPen(penObjects);
+    for (Segment line : controller->get_image_rays()) {
+        int scaledX1 = centerX() + line.start().x() * scaleFactor;
+        int scaledY1 = centerY() + line.start().y() * scaleFactor;
+        int scaledX2 = centerX() + line.end().x() * scaleFactor;
+        int scaledY2 = centerY() + line.end().y() * scaleFactor;
         painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
     }
 }
 
 void GraphicsPanel::draw_rays(QPainter &painter) {
+    QPen penObjects(Qt::yellow);
+    penObjects.setWidth(4);
+    painter.setPen(penObjects);
+    for (Segment ray : controller->get_rays()) {
+        int scaledX1 = centerX() + ray.start().x() * scaleFactor;
+        int scaledY1 = centerY() + ray.start().y() * scaleFactor;
+        int scaledX2 = centerX() + ray.end().x() * scaleFactor;
+        int scaledY2 = centerY() + ray.end().y() * scaleFactor;
 
+        // arrow for ray
+        int arrowLength = 10;
+        int dx = scaledX2 - scaledX1;
+        int dy = scaledY2 - scaledY1;
+        double angle = atan2(dy, dx);
+        int arrowX1 = scaledX2 - arrowLength * cos(angle + M_PI / 4);
+        int arrowY1 = scaledY2 - arrowLength * sin(angle + M_PI / 4);
+        int arrowX2 = scaledX2 - arrowLength * cos(angle - M_PI / 4);
+        int arrowY2 = scaledY2 - arrowLength * sin(angle - M_PI / 4);
+
+        painter.drawLine(QPoint(scaledX1, scaledY1), QPointF(scaledX2, scaledY2));
+
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX1, arrowY1));
+        painter.drawLine(QPoint(scaledX2, scaledY2), QPoint(arrowX2, arrowY2));
+    }
 }
 
 void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
@@ -213,13 +226,13 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
         float scaledCellSize = static_cast<float>(cellSize) * scaleFactor;
         int cellX = qRound(static_cast<float>(pos.x() - centerX()) / scaledCellSize);
         int cellY = qRound(static_cast<float>(pos.y() - centerY()) / scaledCellSize);
-        int x = centerX() + cellX * cellSize;
-        int y = centerY() + cellY * cellSize;
+        int x = cellX * cellSize;
+        int y = cellY * cellSize;
         pos.setX(x);
         pos.setY(y);
 
         if (drawMode == DrawMode::Point) {
-            points.push_back(pos);
+            controller->set_object(pos.x(), pos.y());
         }
         else if (drawMode == DrawMode::Line || drawMode == DrawMode::Ray) {
             if (!startPointSet) {
@@ -227,7 +240,7 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
                 startPointSet = true;
             } else { // if double click - draw line
                 if(drawMode == DrawMode::Line)
-                    lines.emplace_back(startPoint, pos);
+                    rays.emplace_back(startPoint, pos);
                 else
                     rays.emplace_back(startPoint, pos);
                 startPointSet = false;
@@ -278,9 +291,7 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event)
 
 void GraphicsPanel::clearPanel()
 {
-    points.clear();
-    lines.clear();
-    rays.clear();
+    controller->clear_all();
     update();
 }
 
@@ -299,6 +310,8 @@ QPoint GraphicsPanel::getCoordinates(double x, double y)
     int newY = (static_cast<int>(y*cellSize * scaleFactor) + centerY());
     return { newX, newY };
 }
+
+
 
 void GraphicsPanel::addLens()
 {

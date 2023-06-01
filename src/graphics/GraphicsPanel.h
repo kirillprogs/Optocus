@@ -2,8 +2,8 @@
 // Created by Lilly on 28.05.2023.
 //
 
-#ifndef OPTOCUS_GRAPHICSPANEL_H
-#define OPTOCUS_GRAPHICSPANEL_H
+#ifndef OPTOCUS_GRAPHICS_PANEL_H
+#define OPTOCUS_GRAPHICS_PANEL_H
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
@@ -27,11 +27,8 @@ private:
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
     static const int CELL_NUM = 30;
-    // TODO: replace with Lens (int future - list of Lenses)
     QPixmap pixmap;
     int cellSize;
-    QVector<QPoint> points;
-    QVector<QPair<QPoint, QPoint>> lines;
     QVector<QPair<QPoint, QPoint>> rays;
     QPoint startPoint;
     bool startPointSet = false;
@@ -55,6 +52,7 @@ private:
     void draw_axis(QPainter&);
     void draw_object(QPainter&);
     void draw_images(QPainter&);
+    void draw_image_rays(QPainter&);
     void draw_rays(QPainter&);
     void draw_lens(const Lens&, QPainter&);
     void initializeGL() override;
@@ -65,4 +63,4 @@ private:
     QPoint getCoordinates(double x, double y);
 };
 
-#endif //OPTOCUS_GRAPHICSPANEL_H
+#endif //OPTOCUS_GRAPHICS_PANEL_H

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "OpticalController.h"
 
 OpticalController *OpticalController::_instance;
@@ -29,14 +30,16 @@ Segment OpticalController::get_object() const {
 }
 
 list<Segment> OpticalController::get_images() const {
+    list<Segment> list;
     if (optics.hasObject()) {
-        list<Segment> list;
+        std::cout << "object " << optics.object()->x() << " : " << optics.object()->y() << '\n';
         for (const Image<Point> &image : optics.objectImages()) {
             Segment segment(image.getImage(), Point(image.getImage().x(), 0));
+            std::cout << "image " << segment.startX() << " : " << segment.startY() << '\n';
             list.push_back(segment);
         }
     }
-    return list<Segment>();
+    return list;
 }
 
 void OpticalController::clear_all() { optics.clear(); }
