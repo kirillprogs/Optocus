@@ -1,5 +1,16 @@
 #include "OpticalSystem.h"
 
+void OpticalSystem::set_object(const Point &point) {
+    if (hasObject())
+        remove_object();
+    _object = new Point(point);
+}
+
+void OpticalSystem::remove_object() {
+    delete _object;
+    _object = 0;
+}
+
 list<Image<Point>> OpticalSystem::evaluate_object() {
    if (!hasObject()) return list<Image<Point>>();
     /* Sort the array of lenses in order of their abscissa */
@@ -16,7 +27,7 @@ list<Image<Point>> OpticalSystem::evaluate_object() {
     return image_list;
 }
 
-list<Segment> OpticalSystem::evaluate_rays(const Segment &ray) {
+list<Segment> OpticalSystem::evaluate_ray(const Segment &ray) {
     list<Segment> result;
     result.push_back(ray);
     for (int lens_id(0); lens_id < _lenses.size(); ++lens_id) {
@@ -32,10 +43,24 @@ list<Segment> OpticalSystem::evaluate_rays(const Segment &ray) {
 }
 
 void OpticalSystem::evaluate() {
+    _images.clear();
+    _ray_images.clear();
     sort(_lenses.begin(), _lenses.end(),
          [](Lens a, Lens b){ return a.x() < b.x(); });
     _images = evaluate_object();
     for (Segment ray : _rays)
-        for (Segment ray_trace : evaluate_rays(ray))
+        for (Segment ray_trace : evaluate_ray(ray))
             _ray_images.push_back(ray_trace);
+}
+
+void OpticalSystem::clear_geometry() {
+    _images.clear();
+    _ray_images.clear();
+    _rays.clear();
+    remove_object();
+}
+
+void OpticalSystem::clear() {
+    clear_geometry();
+    _lenses.clear();
 }

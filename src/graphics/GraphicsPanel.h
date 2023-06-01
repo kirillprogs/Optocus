@@ -28,9 +28,6 @@ private:
     static const int HEIGHT = 720;
     static const int CELL_NUM = 30;
     // TODO: replace with Lens (int future - list of Lenses)
-    double lensPower = 0.0f;
-    double focalLengthFront = 0.0f;
-    double focalLengthBack = 0.0f;
     QPixmap pixmap;
     int cellSize;
     QVector<QPoint> points;
@@ -45,15 +42,21 @@ private:
 public:
     explicit GraphicsPanel(QWidget* parent = nullptr);
 
-    void setDrawMode(DrawMode mode) {
-        drawMode = mode;
-    }
+    void setDrawMode(DrawMode mode);
 
     void clearPanel();
     void saveModel();
     void addLens();
 
 private:
+    int centerX();
+    int centerY();
+    void draw_cells(QPainter&);
+    void draw_axis(QPainter&);
+    void draw_object(QPainter&);
+    void draw_images(QPainter&);
+    void draw_rays(QPainter&);
+    void draw_lens(const Lens&, QPainter&);
     void initializeGL() override;
     void paintGL() override;
     void mousePressEvent(QMouseEvent* event) override;

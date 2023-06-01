@@ -16,7 +16,7 @@ class Lens {
     double _x;
 
 public:
-    Lens(double opt_pow, double x, double height);
+    Lens(double opt_pow, double x, double height = 1.);
     ~Lens() = default;
 
     double& x() { return _x; }
