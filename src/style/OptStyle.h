@@ -17,35 +17,19 @@
 class OptStyle : public QProxyStyle {
 Q_OBJECT
 public:
+    static constexpr QColor NON_PHOTO_BLUE = QColor(168, 218, 220);
+    static constexpr QColor BERKELEY_BLUE = QColor(29, 53, 87);
+    static constexpr QColor HONEYDEW = QColor(241, 250, 238);
+    static constexpr QColor CERULEAN_BLUE = QColor(69, 123, 157);
+    static constexpr QColor PLAIN_BLACK = QColor(0, 0, 0);
+    static constexpr QColor RED_PANTONE = QColor(230, 57, 70);
     OptStyle() {
-        m_backgroundColor = QColor("#A8DADC");
-        m_menuPanelColor = QColor("#1D3557");
-        m_menuTextColor = QColor("#F1FAEE");
-        m_buttonColor = QColor("#457B9D");
-        m_textColor = QColor("#000000");
-}
 
-    void polish(QWidget *widget) override {
-        QPalette pal = widget->palette();
-        pal.setColor(QPalette::Window, m_backgroundColor);
-        pal.setColor(QPalette::WindowText, m_textColor);
-        pal.setColor(QPalette::Button, m_buttonColor);
-        pal.setColor(QPalette::ButtonText, m_textColor);
-        pal.setColor(QPalette::Base, m_menuPanelColor);
-        pal.setColor(QPalette::Text, m_menuTextColor);
-        widget->setPalette(pal);
     }
+    void polish(QWidget *widget) override;
     void drawControl(ControlElement control, const QStyleOption *option,
                      QPainter *painter, const QWidget *widget) const override;
 
-private:
-    static void setTexture(QPalette &palette, QPalette::ColorRole role,
-                           const QImage &image);
-    QColor m_backgroundColor;
-    QColor m_menuPanelColor;
-    QColor m_menuTextColor;
-    QColor m_buttonColor;
-    QColor m_textColor;
 };
 
 
