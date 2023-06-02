@@ -31,7 +31,7 @@ Point Lens::getImagePoint(const Point &point)
 
 Image<Point> Lens::convergingReal(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, true);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -50,7 +50,7 @@ Image<Point> Lens::convergingReal(const Point &point) {
 
 Image<Point> Lens::convergingImag(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, false);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -67,7 +67,7 @@ Image<Point> Lens::convergingImag(const Point &point) {
 
 Image<Point> Lens::convergingAft(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, true);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -87,7 +87,7 @@ Image<Point> Lens::convergingAft(const Point &point) {
 
 Image<Point> Lens::divergingFore(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, false);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -106,7 +106,7 @@ Image<Point> Lens::divergingFore(const Point &point) {
 
 Image<Point> Lens::divergingReal(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, true);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -125,7 +125,7 @@ Image<Point> Lens::divergingReal(const Point &point) {
 
 Image<Point> Lens::divergingImag(const Point &point) {
     Point image(getImagePoint(point));
-    Image<Point> imageObj(point, image);
+    Image<Point> imageObj(point, image, false);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
     Point foreFocus(x() - getFocusLength());
@@ -142,10 +142,20 @@ Image<Point> Lens::divergingImag(const Point &point) {
     return imageObj;
 }
 
+Image<Point> Lens::convergingNoImage(const Point &point) {
+    return Image<Point>(Point(), Point());
+}
+
+Image<Point> Lens::divergingNoImage(const Point &point) {
+    return Image<Point>(Point(), Point());
+}
+
 Image<Point> Lens::getImage(const Point &point) {
     if (isConverging()) {
         if (point.x() < x() - getFocusLength())
             return convergingReal(point);
+        else if (point.x() == x() - getFocusLength())
+            return convergingNoImage(point);
         else if (point.x() < x())
             return convergingImag(point);
         return convergingAft(point);
@@ -154,6 +164,8 @@ Image<Point> Lens::getImage(const Point &point) {
             return divergingFore(point);
         else if (point.x() < x() + getFocusLength())
             return divergingReal(point);
+        else if (point.x() == x() + getFocusLength())
+            return divergingNoImage(point);
         return divergingImag(point);
     }
 }
