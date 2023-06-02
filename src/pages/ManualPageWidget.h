@@ -2,8 +2,8 @@
 // Created by Lilly on 26.05.2023.
 //
 
-#ifndef OPTOCUS_PHENOMPAGEWIDGET_H
-#define OPTOCUS_PHENOMPAGEWIDGET_H
+#ifndef OPTOCUS_MANUALPAGEWIDGET_H
+#define OPTOCUS_MANUALPAGEWIDGET_H
 
 #include <QWidget>
 #include <QScrollBar>
@@ -15,12 +15,17 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-class PhenomPageWidget : public QWidget  {
+class ManualPageWidget : public QWidget  {
 Q_OBJECT
 public:
-    explicit PhenomPageWidget(QWidget *parent = nullptr);
+    enum class ManualType {
+        PhenomPage,
+        DevicesPage
+    };
+    explicit ManualPageWidget(ManualType type, QWidget *parent = nullptr);
 private:
-    QFile jsonFile = QFile("../resources/phenomena.json");
+    ManualType page_type;
+    QFile* jsonFile;
     QString getHeaders(QLayout &contentLayout);
     QJsonArray getJsonArray();
     QWidget * addImages(QJsonObject object);
@@ -29,4 +34,4 @@ private:
 };
 
 
-#endif //OPTOCUS_PHENOMPAGEWIDGET_H
+#endif //OPTOCUS_MANUALPAGEWIDGET_H

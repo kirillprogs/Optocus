@@ -6,10 +6,16 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QtCore/QEventLoop>
-#include "PhenomPageWidget.h"
+#include "ManualPageWidget.h"
 #include "../style/OptStyle.h"
 
-PhenomPageWidget::PhenomPageWidget(QWidget *parent) : QWidget(parent)  {
+ManualPageWidget::ManualPageWidget(ManualType type, QWidget *parent) : page_type(type), QWidget(parent)  {
+    if(type == ManualType::PhenomPage) {
+        jsonFile = new QFile("../resources/phenomena.json");
+    }
+    else {
+        jsonFile = new QFile("../resources/devices.json");
+    }
     // panel for info
     QWidget *contentWidget = new QWidget(this);
     QScrollArea *scrollArea = new QScrollArea(this);
@@ -31,7 +37,6 @@ PhenomPageWidget::PhenomPageWidget(QWidget *parent) : QWidget(parent)  {
     navLabel->setTextFormat(Qt::RichText);
     navLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     navigationLayout->addWidget(navLabel);
-
 
     connect(navLabel, &QLabel::linkActivated, this, [scrollArea](const QString& link) {
         // we got string "#{num}" and should get only num without #
@@ -69,7 +74,7 @@ PhenomPageWidget::PhenomPageWidget(QWidget *parent) : QWidget(parent)  {
     setLayout(mainLayout);
 }
 
-QString PhenomPageWidget::getHeaders(QLayout& contentLayout) {
+QString ManualPageWidget::getHeaders(QLayout& contentLayout) {
     QString navText;
 
     QJsonArray phenomenaArray = getJsonArray();
@@ -89,19 +94,19 @@ QString PhenomPageWidget::getHeaders(QLayout& contentLayout) {
     return navText;
 }
 
-QJsonArray PhenomPageWidget::getJsonArray() {
+QJsonArray ManualPageWidget::getJsonArray() {
 
-    if (!jsonFile.open(QIODevice::ReadOnly)) {
-        qDebug() << "Не вдалося відкрити файл " << jsonFile.fileName();
+    if (!jsonFile->open(QIODevice::ReadOnly)) {
+        qDebug() << "Не вдалося відкрити файл " << jsonFile->fileName();
         return {};
     }
-    QByteArray jsonData = jsonFile.readAll();
-    jsonFile.close();
+    QByteArray jsonData = jsonFile->readAll();
+    jsonFile->close();
     QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonData));
     return jsonDoc.array();
 }
 
-QWidget * PhenomPageWidget::addImages(QJsonObject object) {
+QWidget * ManualPageWidget::addImages(QJsonObject object) {
     QString imagePath = object["image"].toString();
 
     QWidget *imageWidget = new QWidget(this);
@@ -111,17 +116,33 @@ QWidget * PhenomPageWidget::addImages(QJsonObject object) {
     QPixmap image = loadPixmapFromUrl(imageUrl);
 
     if (!image.isNull()) {
-        imgLabel->setFixedWidth(this->width());
+        imgLabel->setFixedWidth(this->width()/2);
         imgLabel->setFixedHeight(this->height()/2);
         imgLabel->setPixmap(image.scaled(imgLabel->width(),imgLabel->height(),Qt::KeepAspectRatio));
         imgLabel->setAlignment(Qt::AlignCenter);
     }
     imageLayout->addWidget(imgLabel);
+
+    if(page_type == ManualType::DevicesPage) {
+        // TODO: change model path to local files
+        QString modelPath = object["model"].toString();
+        QLabel* modelLabel = new QLabel(this);
+        QUrl modelUrl(imagePath);
+        QPixmap model = loadPixmapFromUrl(modelUrl);
+        if (!model.isNull()) {
+            modelLabel->setFixedWidth(this->width()/2);
+            modelLabel->setFixedHeight(this->height()/2);
+            modelLabel->setPixmap(model.scaled(modelLabel->width(),modelLabel->height(),Qt::KeepAspectRatio));
+            modelLabel->setAlignment(Qt::AlignCenter);
+        }
+        imageLayout->addWidget(modelLabel);
+    }
+
     imageWidget->setLayout(imageLayout);
     return imageWidget;
 }
 
-QPixmap PhenomPageWidget::loadPixmapFromUrl(const QUrl& url) {
+QPixmap ManualPageWidget::loadPixmapFromUrl(const QUrl& url) {
     QNetworkAccessManager manager;
     QNetworkReply* reply = manager.get(QNetworkRequest(url));
 
@@ -134,7 +155,7 @@ QPixmap PhenomPageWidget::loadPixmapFromUrl(const QUrl& url) {
     return pixmap;
 }
 
-QLabel * PhenomPageWidget::addLabel(QJsonObject object, const QString& type, int fontSize) {
+QLabel * ManualPageWidget::addLabel(QJsonObject object, const QString& type, int fontSize) {
     QString string = object[type].toString();
 
     QLabel *label = new QLabel(this);
