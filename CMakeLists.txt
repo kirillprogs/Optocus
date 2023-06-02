@@ -6,26 +6,47 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "/home/kirill/Qt/6.5.0/gcc_64")
+set(CMAKE_PREFIX_PATH $ENV{QTDIR})
 
 find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
+        OpenGLWidgets
+        OpenGL
+        Network
         REQUIRED)
 
-include_directories(Optocus include)
-add_executable(Optocus src/main.cpp src/Window.cpp include/Window.h)
+add_subdirectory(lib/calculating)
+
+file(GLOB_RECURSE LIB_INCLUDE_DIRS LIST_DIRECTORIES true
+        ${CMAKE_SOURCE_DIR}/lib/*/include)
+
+include_directories(Optocus ${LIB_INCLUDE_DIRS})
+
+file(GLOB_RECURSE SOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.c
+        ${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
 target_link_libraries(Optocus
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt::OpenGL
+        Qt6::OpenGLWidgets
+        Qt6::Network
+        calculating
         )
+if(UNIX)
+    find_package(GLUT REQUIRED)
+    target_link_libraries(Optocus
+            OpenGL::GL
+            GLUT::GLUT
+            )
+endif()
 
-include_directories(Rectangle test/src test/include)
-add_executable(Rectangle test/src/rectangle.cpp test/include/rectangle.h)
-target_link_libraries(Rectangle
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-        )
+if (WIN32)
+    target_link_libraries(Optocus opengl32)
+endif()
