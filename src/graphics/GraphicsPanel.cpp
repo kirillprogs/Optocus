@@ -1,3 +1,7 @@
+#include <QFormLayout>
+#include <QDoubleSpinBox>
+#include <QDialogButtonBox>
+#include <QMessageBox>
 #include "GraphicsPanel.h"
 
 void GraphicsPanel::setDrawMode(DrawMode mode) { drawMode = mode; }
@@ -313,15 +317,62 @@ QPoint GraphicsPanel::getCoordinates(double x, double y)
 
 
 
-void GraphicsPanel::addLens()
-{
-    bool ok;
-    double power = QInputDialog::getDouble(this, tr("Add Lens"),
-                                           tr("Enter lens power:"),
-                                           0.0, -100.0, 100.0, 2, &ok);
-    double x = 0;
-    if (ok) {
+void GraphicsPanel::addLens() {
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Додати лінзу"));
+    QFormLayout formLayout(&dialog);
+
+    QDoubleSpinBox powerSpinBox;
+    powerSpinBox.setRange(-10, 10);
+    QSpinBox coordSpinBox;
+    coordSpinBox.setRange(-this->width() / cellSize, this->width() / cellSize);
+
+    formLayout.addRow(tr("Оптична сила:"), &powerSpinBox);
+    formLayout.addRow(tr("Координата x:"), &coordSpinBox);
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok);
+    formLayout.addRow(&buttonBox);
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, [&]() {
+        if (powerSpinBox.value() == 0.0) {
+            QMessageBox::critical(this, tr("Помилка!"), tr("Оптична сила лінзи не може бути рівна 0."));
+            return;
+        }
+        // or lens with coordinate coordSpinBox.value() is already exists?
+        dialog.accept();
+    });
+
+    if (dialog.exec() == QDialog::Accepted) {
+        double power = powerSpinBox.value();
+        int x = coordSpinBox.value();
         controller->add_lens(Lens(power, x));
+        update();
+    }
+}
+
+void GraphicsPanel::addObject() {
+    // TODO unify QDialog
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Додати об'єкт"));
+    QFormLayout formLayout(&dialog);
+
+    QSpinBox spinBox1;
+    spinBox1.setRange(-INT_MAX, INT_MAX);
+    QSpinBox spinBox2;
+    spinBox2.setRange(-this->width() / cellSize, this->width() / cellSize);
+
+    formLayout.addRow(tr("Висота об'єкта:"), &spinBox1);
+    formLayout.addRow(tr("Координата x:"), &spinBox2);
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok);
+    formLayout.addRow(&buttonBox);
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        double height = spinBox1.value();
+        int x = spinBox2.value();
+        QPoint obj = getCoordinates(x, height);
+        float scaledCellSize = static_cast<float>(cellSize) * scaleFactor;
+        int cellX = qRound(static_cast<float>(obj.x() - centerX()) / scaledCellSize);
+        int cellY = qRound(static_cast<float>(obj.y() - centerY()) / scaledCellSize);
+        controller->set_object(cellX * cellSize, -cellY * cellSize);
         update();
     }
 }

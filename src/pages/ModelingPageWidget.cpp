@@ -12,19 +12,16 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->setContentsMargins(0, 0, 0, 0);
 
     GraphicsPanel* drawingWidget = new GraphicsPanel(this);
     layout->addWidget(drawingWidget, 4);
 
     QWidget *rightPanel = new QWidget;
     QVBoxLayout *layout2 = new QVBoxLayout(rightPanel);
-    layout2->setContentsMargins(0, 0, 0, 0);
 
     // Верхня права панель з кнопками
     QWidget *buttonPanel = new QWidget;
     QVBoxLayout *buttonPanelLayout = new QVBoxLayout(buttonPanel);
-    buttonPanelLayout->setContentsMargins(0, 0, 0, 0);
 
     QPushButton *addLensButton = new QPushButton("Додати лінзу");
     connect(addLensButton, &QPushButton::clicked, [=]() {
@@ -34,13 +31,17 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     connect(drawRayButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Ray);
     });
-    QPushButton *drawObjectButton = new QPushButton("Намалювати тіло");
+    /*QPushButton *drawObjectButton = new QPushButton("Намалювати тіло");
     connect(drawObjectButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Line);
-    });
+    });*/
     QPushButton *drawPointButton = new QPushButton("Намалювати точку");
     connect(drawPointButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Point);
+    });
+    QPushButton *addObjectButton = new QPushButton("Додати об'єкт");
+    connect(addObjectButton, &QPushButton::clicked, [=]() {
+        drawingWidget->addObject();
     });
     QPushButton *changeScaleButton = new QPushButton("Поміняти масштаб");
     QPushButton *saveButton = new QPushButton("Зберегти модель", this);
@@ -54,8 +55,9 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
 
     buttonPanelLayout->addWidget(addLensButton);
     buttonPanelLayout->addWidget(drawRayButton);
-    buttonPanelLayout->addWidget(drawObjectButton);
+    // buttonPanelLayout->addWidget(drawObjectButton);
     buttonPanelLayout->addWidget(drawPointButton);
+    buttonPanelLayout->addWidget(addObjectButton);
     buttonPanelLayout->addWidget(changeScaleButton);
     buttonPanelLayout->addWidget(saveButton);
     buttonPanelLayout->addWidget(clearButton);
@@ -65,7 +67,6 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
 
     layout2->addWidget(buttonPanel, 1);
     layout2->addWidget(resultsText, 1);
-
     layout->addWidget(rightPanel, 1);
 
 

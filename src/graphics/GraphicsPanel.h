@@ -23,6 +23,8 @@ public:
         Ray
     };
 
+    void addObject();
+
 private:
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
@@ -61,6 +63,7 @@ private:
     void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     QPoint getCoordinates(double x, double y);
+
 };
 
 #endif //OPTOCUS_GRAPHICS_PANEL_H
