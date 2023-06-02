@@ -10,8 +10,7 @@
 #include "../HomePageWidget.h"
 #include "../ModelingPageWidget.h"
 #include "../CalculatorPageWidget.h"
-#include "../DevicesPageWidget.h"
-#include "../PhenomPageWidget.h"
+#include "../ManualPageWidget.h"
 
 
 Pages::Pages(QWidget *parent) :
@@ -22,8 +21,8 @@ Pages::Pages(QWidget *parent) :
     homePage = new HomePageWidget;
     modelingPage = new ModelingPageWidget;
     calculatorPage = new CalculatorPageWidget;
-    devicesPage = new DevicesPageWidget;
-    opticalPhenomenaPage = new PhenomPageWidget;
+    devicesPage = new ManualPageWidget(ManualPageWidget::ManualType::DevicesPage);
+    opticalPhenomenaPage = new ManualPageWidget(ManualPageWidget::ManualType::PhenomPage);
 
     stackedWidget = ui->stackedWidget;
     stackedWidget->addWidget(homePage);
