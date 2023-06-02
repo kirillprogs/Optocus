@@ -10,7 +10,7 @@ OpticalController *OpticalController::instance() {
 }
 
 const vector<Lens> &OpticalController::get_lenses() const { return optics.lenses(); }
-const list<Segment> &OpticalController::get_rays() const { return optics.rayImages(); }
+const list<Segment> &OpticalController::get_rays() const { return optics.rayTrace(); }
 
 list<Segment> OpticalController::get_image_rays() const {
     list<Segment> list;

@@ -55,6 +55,8 @@ private:
     Image<Point> divergingFore(const Point &point);
     Image<Point> divergingReal(const Point &point);
     Image<Point> divergingImag(const Point &point);
+    Image<Point> convergingNoImage(const Point &point);
+    Image<Point> divergingNoImage(const Point &point);
 
 public:
     Image<Point> getImage(const Point &point);
