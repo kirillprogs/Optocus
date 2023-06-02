@@ -10,13 +10,22 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class PhenomPageWidget : public QWidget  {
 Q_OBJECT
 public:
     explicit PhenomPageWidget(QWidget *parent = nullptr);
 private:
-    // необхідні елементи і логіка для сторінки "Оптичні явища"
+    QFile jsonFile = QFile("../resources/phenomena.json");
+    QString getHeaders(QLayout &contentLayout);
+    QJsonArray getJsonArray();
+    QWidget * addImages(QJsonObject object);
+    QLabel *addLabel(QJsonObject object, const QString& type, int fontSize);
+    static QPixmap loadPixmapFromUrl(const QUrl &url);
 };
 
 
