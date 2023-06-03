@@ -39,7 +39,8 @@ public:
 
     const vector<Lens> &lenses() const { return _lenses; }
     const vector<Segment> &rays() const { return _rays; }
-    void addLens(const Lens &lens) { _lenses.push_back(lens); }
+    void addLens(const Lens &lens);
+    void addRay(const Segment &ray);
 
     void set_object(const Point &point);
     void remove_object();

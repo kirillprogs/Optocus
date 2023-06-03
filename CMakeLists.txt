@@ -39,14 +39,13 @@ target_link_libraries(Optocus
         Qt6::Network
         calculating
         )
+
 if(UNIX)
     find_package(GLUT REQUIRED)
     target_link_libraries(Optocus
             OpenGL::GL
             GLUT::GLUT
             )
-endif()
-
-if (WIN32)
+elseif (WIN32)
     target_link_libraries(Optocus opengl32)
 endif()

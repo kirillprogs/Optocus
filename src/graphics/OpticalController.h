@@ -26,6 +26,7 @@ public:
     void clear_geometry();
 
     void add_lens(const Lens&);
+    void add_ray(const Segment&);
     void set_object(double x, double y);
 
     /* Somehow organize returning of element on position specified */

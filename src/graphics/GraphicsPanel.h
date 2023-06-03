@@ -12,6 +12,10 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QFormLayout>
+#include <QDoubleSpinBox>
+#include <QDialogButtonBox>
+#include <QMessageBox>
 #include "OpticalController.h"
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
@@ -31,7 +35,6 @@ private:
     static const int CELL_NUM = 30;
     QPixmap pixmap;
     int cellSize;
-    QVector<QPair<QPoint, QPoint>> rays;
     QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;

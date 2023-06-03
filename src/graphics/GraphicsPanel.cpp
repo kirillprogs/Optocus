@@ -1,7 +1,3 @@
-#include <QFormLayout>
-#include <QDoubleSpinBox>
-#include <QDialogButtonBox>
-#include <QMessageBox>
 #include "GraphicsPanel.h"
 
 void GraphicsPanel::setDrawMode(DrawMode mode) { drawMode = mode; }
@@ -244,13 +240,14 @@ void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
                 startPointSet = true;
             } else { // if double click - draw line
                 if(drawMode == DrawMode::Line)
-                    rays.emplace_back(startPoint, pos);
+                    controller->add_ray(Segment(Point(startPoint.x(), startPoint.y()),
+                                                Point(pos.x(), pos.y())));
                 else
-                    rays.emplace_back(startPoint, pos);
+                    controller->add_ray(Segment(Point(startPoint.x(), startPoint.y()),
+                                                Point(pos.x(), pos.y())));
                 startPointSet = false;
             }
         }
-
         update();
     }
 }

@@ -74,3 +74,6 @@ void OpticalSystem::clear() {
     clear_geometry();
     _lenses.clear();
 }
+
+void OpticalSystem::addLens(const Lens &lens) { _lenses.push_back(lens); }
+void OpticalSystem::addRay(const Segment &ray) { _rays.push_back(ray); }

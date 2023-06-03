@@ -50,6 +50,14 @@ void OpticalController::add_lens(const Lens &lens) {
     optics.evaluate();
 }
 
+void OpticalController::add_ray(const Segment &ray) {
+    if (ray.startX() < ray.endX())
+        optics.addRay(ray);
+    else
+        optics.addRay(Segment(ray.end(), ray.start()));
+    optics.evaluate();
+}
+
 void OpticalController::set_object(double x, double y) {
     optics.set_object(Point(x, y));
     optics.evaluate();
