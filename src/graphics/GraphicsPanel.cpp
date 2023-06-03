@@ -28,15 +28,7 @@ void GraphicsPanel::paintGL()
     QPainter painter(&pixmap);
     if (!painter.isActive())
         painter.begin(this);
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    double offsetX = (controller->width() / 2.0) * (1.0 - controller->scale());
-    double offsetY = (controller->height() / 2.0) * (1.0 - controller->scale());
-
-    glTranslated(offsetX, offsetY, 0.0);
     glScaled(controller->scale(), controller->scale(), 1.0);
-    glTranslated(-offsetX, -offsetY, 0.0);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     painter.fillRect(0, 0, width(), height(), QColor(241, 250, 238));
 
@@ -63,7 +55,8 @@ void GraphicsPanel::paintGL()
     painterGL.drawPixmap(0, 0, pixmap);
 }
 
-void GraphicsPanel::draw_cells(QPainter &painter) {
+void GraphicsPanel::draw_cells(QPainter &painter)
+{
     QPen penSystem(QColor(29, 53, 87, 100));
     penSystem.setWidth(1);
     painter.setPen(penSystem);
@@ -137,22 +130,18 @@ void GraphicsPanel::draw_lens(const Lens &lens, QPainter &painter)
     penFoci.setWidth(5);
     painter.setPen(penFoci);
 
-    // !!!!!!!!!
-    QPoint front = getCoordinates(lens.x() - lens.getFocusLength(), 0);
-    QPoint back = getCoordinates(lens.x() + lens.getFocusLength(), 0);
-    // !!!!!!!!!
+    Point front = controller->screenPoint(Point(lens.x() - lens.getFocusLength(), 0));
+    Point back = controller->screenPoint(Point(lens.x() + lens.getFocusLength(), 0));
 
-    painter.drawPoint(front);
-    painter.drawPoint(back);
+    painter.drawPoint(front.x(), front.y());
+    painter.drawPoint(back.x(), back.y());
 }
 
 void GraphicsPanel::draw_axis(QPainter &painter) {
     QPen penSystem(QColor(29, 53, 87));
     penSystem.setWidth(3);
     painter.setPen(penSystem);
-    // !!!!!!!
-    int optAxis = static_cast<int>(height() / 2);
-    // !!!!!!!
+    int optAxis = controller->height() / 2;
     painter.drawLine(0, optAxis, width(), optAxis);
 }
 
@@ -178,7 +167,7 @@ void GraphicsPanel::draw_image_rays(QPainter &painter) {
     QPen penObjects(Qt::black);
     penObjects.setWidth(2);
     painter.setPen(penObjects);
-    for (Segment line : controller->get_images()) {
+    for (Segment line : controller->get_image_rays()) {
         Segment translated = controller->screenSegment(line);
         painter.drawLine(translated.startX(), translated.startY(), translated.endX(), translated.endY());
     }
@@ -207,34 +196,21 @@ void GraphicsPanel::draw_rays(QPainter &painter) {
     }
 }
 
-void GraphicsPanel::mousePressEvent(QMouseEvent *event) {
+void GraphicsPanel::mousePressEvent(QMouseEvent *event)
+{
     if (event->button() == Qt::LeftButton) {
         // get position
         QPoint pos = event->pos();
-
-        // TODO fix for all scales
-        float scaledCellSize = static_cast<float>(controller->cell_size()) * scaleFactor;
-        int cellX = qRound(static_cast<float>(pos.x() - centerX()) / scaledCellSize);
-        int cellY = qRound(static_cast<float>(pos.y() - centerY()) / scaledCellSize);
-        int x = cellX * controller->cell_size();
-        int y = cellY * controller->cell_size();
-        pos.setX(x);
-        pos.setY(y);
-
-        if (drawMode == DrawMode::Point) {
-            controller->set_object(pos.x(), pos.y());
-        }
-        else if (drawMode == DrawMode::Line || drawMode == DrawMode::Ray) {
+        if (drawMode == DrawMode::Point)
+            controller->set_object(controller->getX(pos.x()), controller->getY(pos.y()));
+        else if (drawMode == DrawMode::Ray) {
             if (!startPointSet) {
                 startPoint = pos;
                 startPointSet = true;
             } else { // if double click - draw line
-                if(drawMode == DrawMode::Line)
-                    controller->add_ray(Segment(Point(startPoint.x(), startPoint.y()),
-                                                Point(pos.x(), pos.y())));
-                else
-                    controller->add_ray(Segment(Point(startPoint.x(), startPoint.y()),
-                                                Point(pos.x(), pos.y())));
+                Point start(controller->getX(startPoint.x()), controller->getY(startPoint.y()));
+                Point end(controller->getX(pos.x()), controller->getY(pos.y()));
+                controller->add_ray(Segment(start, end));
                 startPointSet = false;
             }
         }
@@ -247,16 +223,16 @@ void GraphicsPanel::keyPressEvent(QKeyEvent *event)
     if(event->modifiers() == (Qt::ControlModifier | Qt::KeypadModifier)) {
         switch(event->key()) {
             case Qt::Key_Plus:
-                scaleFactor *= 1.2;
-                if (scaleFactor > 3.0)
-                    scaleFactor = 3.0;
+                controller->scale() *= 1.2;
+                if (controller->scale() > 3.0)
+                    controller->scale() = 3.0;
                 update();
                 break;
             case Qt::Key_Minus:
-                scaleFactor /= 1.2;
-                if (scaleFactor < 0.4)
-                    scaleFactor = 0.4;
-                qDebug() << "_scale:" << scaleFactor;
+                controller->scale() /= 1.2;
+                if (controller->scale() < 0.4)
+                    controller->scale() = 0.4;
+                qDebug() << "_scale:" << controller->scale();
                 update();
                 break;
             default:
@@ -271,11 +247,11 @@ void GraphicsPanel::wheelEvent(QWheelEvent *event)
     if (event->modifiers() == Qt::ControlModifier) {
         int numDegrees = event->angleDelta().y() / 8;
         float numSteps = static_cast<float>(numDegrees) / 15.0f;
-        scaleFactor *= qPow(1.125f, numSteps);
-        if (scaleFactor > 3.0)
-            scaleFactor = 3.0;
-        else if (scaleFactor < 0.4)
-            scaleFactor = 0.4;
+        controller->scale() *= qPow(1.125f, numSteps);
+        if (controller->scale() > 3.0)
+            controller->scale() = 3.0;
+        else if (controller->scale() < 0.4)
+            controller->scale() = 0.4;
         update();
     }
 }
@@ -288,18 +264,13 @@ void GraphicsPanel::clearPanel()
 
 void GraphicsPanel::saveModel()
 {
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("Images (*.png *.xpm *.jpg)"));
+    QString filePath =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Save Image"), "",
+                                         tr("Images (*.png *.xpm *.jpg)"));
     if (!filePath.isEmpty()) {
         pixmap.save(filePath);
     }
-}
-
-// TODO: args Point
-QPoint GraphicsPanel::getCoordinates(double x, double y)
-{
-    int newX = (static_cast<int>(x*controller->cell_size() * scaleFactor) + centerX());
-    int newY = (static_cast<int>(y*controller->cell_size() * scaleFactor) + centerY());
-    return { newX, newY };
 }
 
 void GraphicsPanel::addLens() {
@@ -309,7 +280,7 @@ void GraphicsPanel::addLens() {
 
     QDoubleSpinBox powerSpinBox;
     powerSpinBox.setRange(-10, 10);
-    QSpinBox coordSpinBox;
+    QDoubleSpinBox coordSpinBox;
     coordSpinBox.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
 
     formLayout.addRow(tr("Оптична сила:"), &powerSpinBox);
@@ -318,7 +289,8 @@ void GraphicsPanel::addLens() {
     formLayout.addRow(&buttonBox);
     QObject::connect(&buttonBox, &QDialogButtonBox::accepted, [&]() {
         if (powerSpinBox.value() == 0.0) {
-            QMessageBox::critical(this, tr("Помилка!"), tr("Оптична сила лінзи не може бути рівна 0."));
+            QMessageBox::critical(this, tr("Помилка!"),
+                                  tr("Оптична сила лінзи не може бути рівна 0."));
             return;
         }
         // or lens with coordinate coordSpinBox.value() is already exists?
@@ -327,7 +299,7 @@ void GraphicsPanel::addLens() {
 
     if (dialog.exec() == QDialog::Accepted) {
         double power = powerSpinBox.value();
-        int x = coordSpinBox.value();
+        double x = coordSpinBox.value();
         controller->add_lens(Lens(power, x));
         update();
     }
@@ -339,10 +311,8 @@ void GraphicsPanel::addObject() {
     dialog.setWindowTitle(tr("Додати об'єкт"));
     QFormLayout formLayout(&dialog);
 
-    QSpinBox spinBox1;
-    spinBox1.setRange(-INT_MAX, INT_MAX);
-    QSpinBox spinBox2;
-    spinBox2.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
+    QDoubleSpinBox spinBox1;
+    QDoubleSpinBox spinBox2;
 
     formLayout.addRow(tr("Висота об'єкта:"), &spinBox1);
     formLayout.addRow(tr("Координата x:"), &spinBox2);
@@ -352,12 +322,8 @@ void GraphicsPanel::addObject() {
 
     if (dialog.exec() == QDialog::Accepted) {
         double height = spinBox1.value();
-        int x = spinBox2.value();
-        QPoint obj = getCoordinates(x, height);
-        float scaledCellSize = static_cast<float>(controller->cell_size()) * scaleFactor;
-        int cellX = qRound(static_cast<float>(obj.x() - centerX()) / scaledCellSize);
-        int cellY = qRound(static_cast<float>(obj.y() - centerY()) / scaledCellSize);
-        controller->set_object(cellX * controller->cell_size(), -cellY * controller->cell_size());
+        double x = spinBox2.value();
+        controller->set_object(x, height);
         update();
     }
 }
