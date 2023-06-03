@@ -30,16 +30,11 @@ public:
     void addObject();
 
 private:
-    static const int WIDTH = 1200;
-    static const int HEIGHT = 720;
-    static const int CELL_NUM = 30;
     QPixmap pixmap;
-    int cellSize;
     QPoint startPoint;
     bool startPointSet = false;
     DrawMode drawMode = DrawMode::Point;
     OpticalController *controller;
-    float scaleFactor;
 
 public:
     explicit GraphicsPanel(QWidget* parent = nullptr);
@@ -51,8 +46,6 @@ public:
     void addLens();
 
 private:
-    int centerX();
-    int centerY();
     void draw_cells(QPainter&);
     void draw_axis(QPainter&);
     void draw_object(QPainter&);

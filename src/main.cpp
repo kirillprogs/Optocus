@@ -10,8 +10,8 @@ int main(int argc, char **argv)
     QApplication::setStyle("Fusion");
     QApplication::setPalette(QApplication::style()->standardPalette());
 
-    OptStyle myStyle;
-    QApplication::setStyle(&myStyle);
+    //OptStyle myStyle;
+    //QApplication::setStyle(&myStyle);
 
     QIcon icon("../images/logo.png");
     QApplication::setWindowIcon(icon);
