@@ -30,7 +30,6 @@ private:
     QJsonArray getJsonArray();
     QWidget * addImages(QJsonObject object);
     QLabel *addLabel(QJsonObject object, const QString& type, int fontSize);
-    static QPixmap loadPixmapFromUrl(const QUrl &url);
 };
 
 
