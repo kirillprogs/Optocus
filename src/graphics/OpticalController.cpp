@@ -1,4 +1,3 @@
-#include <iostream>
 #include "OpticalController.h"
 
 OpticalController *OpticalController::_instance;
@@ -9,21 +8,21 @@ OpticalController *OpticalController::instance() {
     return OpticalController::_instance;
 }
 
-const vector<Lens> &OpticalController::get_lenses() const { return optics.lenses(); }
-const list<Segment> &OpticalController::get_rays() const { return optics.rayTrace(); }
+const vector<Lens> &OpticalController::get_lenses() const { return _optics.lenses(); }
+const list<Segment> &OpticalController::get_rays() const { return _optics.rayTrace(); }
 
 list<Segment> OpticalController::get_image_rays() const {
     list<Segment> list;
-    for (const Image<Point> &image : optics.objectImages())
+    for (const Image<Point> &image : _optics.objectImages())
         for (const Segment &segment : image.getRays())
             list.push_back(segment);
     return list;
 }
 
-bool OpticalController::has_object() const { return optics.hasObject(); }
+bool OpticalController::has_object() const { return _optics.hasObject(); }
 Segment OpticalController::get_object() const {
-    if (optics.hasObject()) {
-        Point end(*optics.object());
+    if (_optics.hasObject()) {
+        Point end(*_optics.object());
         return Segment(end, Point(end.x(), 0));
     }
     return Segment(Point(), Point());
@@ -31,34 +30,32 @@ Segment OpticalController::get_object() const {
 
 list<Segment> OpticalController::get_images() const {
     list<Segment> list;
-    if (optics.hasObject()) {
-        std::cout << "object " << optics.object()->x() << " : " << optics.object()->y() << '\n';
-        for (const Image<Point> &image : optics.objectImages()) {
+    if (_optics.hasObject()) {
+        for (const Image<Point> &image : _optics.objectImages()) {
             Segment segment(image.getImage(), Point(image.getImage().x(), 0));
-            std::cout << "image " << segment.startX() << " : " << segment.startY() << '\n';
             list.push_back(segment);
         }
     }
     return list;
 }
 
-void OpticalController::clear_all() { optics.clear(); }
-void OpticalController::clear_geometry() { optics.clear_geometry(); }
+void OpticalController::clear_all() { _optics.clear(); }
+void OpticalController::clear_geometry() { _optics.clear_geometry(); }
 
 void OpticalController::add_lens(const Lens &lens) {
-    optics.addLens(lens);
-    optics.evaluate();
+    _optics.addLens(lens);
+    _optics.evaluate();
 }
 
 void OpticalController::add_ray(const Segment &ray) {
     if (ray.startX() < ray.endX())
-        optics.addRay(ray);
+        _optics.addRay(ray);
     else
-        optics.addRay(Segment(ray.end(), ray.start()));
-    optics.evaluate();
+        _optics.addRay(Segment(ray.end(), ray.start()));
+    _optics.evaluate();
 }
 
 void OpticalController::set_object(double x, double y) {
-    optics.set_object(Point(x, y));
-    optics.evaluate();
+    _optics.set_object(Point(x, y));
+    _optics.evaluate();
 }
