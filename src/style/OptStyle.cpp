@@ -55,34 +55,8 @@ void OptStyle::unpolish(QWidget *widget) {
         widget->setAttribute(Qt::WA_Hover, false);
 }
 
-int OptStyle::pixelMetric(PixelMetric metric,
-                                    const QStyleOption *option,
-                                    const QWidget *widget) const{
-    switch (metric) {
-        case PM_ComboBoxFrameWidth:
-            return 8;
-        case PM_ScrollBarExtent:
-            return QProxyStyle::pixelMetric(metric, option, widget) + 4;
-        default:
-            return QProxyStyle::pixelMetric(metric, option, widget);
-    }
-}
-
-int OptStyle::styleHint(StyleHint hint, const QStyleOption *option,
-                                  const QWidget *widget,
-                                  QStyleHintReturn *returnData) const {
-    switch (hint) {
-        case SH_DitherDisabledText:
-            return int(false);
-        case SH_EtchDisabledText:
-            return int(true);
-        default:
-            return QProxyStyle::styleHint(hint, option, widget, returnData);
-    }
-}
-
-void OptStyle::drawComplexControl(OptStyle::ComplexControl control, const QStyleOptionComplex* option,
-                        QPainter* painter, const QWidget* widget = nullptr) const {
+void OptStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex* option,
+                        QPainter* painter, const QWidget* widget) const {
     if (control == QStyle::CC_ScrollBar) {
         const auto* sliderOption = qstyleoption_cast<const QStyleOptionSlider*>(option);
         if (sliderOption) {

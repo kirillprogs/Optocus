@@ -26,21 +26,14 @@ public:
     static constexpr QColor PLAIN_BLACK = QColor(0, 0, 0);
     static constexpr QColor RED_PANTONE = QColor(230, 57, 70);
     static constexpr QColor SALMON_PINK = QColor(236, 154, 154);
-    OptStyle() {
-
-    }
+    OptStyle(): QProxyStyle("Fusion") {}
     void polish(QWidget *widget) override;
     void unpolish(QWidget *widget) override;
     void drawControl(ControlElement control, const QStyleOption *option,
                      QPainter *painter, const QWidget *widget) const override;
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const override;
-
-    int styleHint(StyleHint hint, const QStyleOption *option,
-                  const QWidget *widget, QStyleHintReturn *returnData) const override;
-
-    void drawComplexControl(OptStyle::ComplexControl control, const QStyleOptionComplex *option, QPainter *painter,
-                            const QWidget *widget) const override;
+    void drawComplexControl(QStyle::ComplexControl control, const QStyleOptionComplex *option,
+                            QPainter *painter, const QWidget *widget) const override;
 };
 
 
