@@ -21,15 +21,15 @@ Pages::Pages(QWidget *parent) :
     homePage = new HomePageWidget;
     modelingPage = new ModelingPageWidget;
     calculatorPage = new CalculatorPageWidget;
-    //devicesPage = new ManualPageWidget(ManualPageWidget::ManualType::DevicesPage);
-    //opticalPhenomenaPage = new ManualPageWidget(ManualPageWidget::ManualType::PhenomPage);
+    devicesPage = new ManualPageWidget(ManualPageWidget::ManualType::DevicesPage);
+    opticalPhenomenaPage = new ManualPageWidget(ManualPageWidget::ManualType::PhenomPage);
 
     stackedWidget = ui->stackedWidget;
     stackedWidget->addWidget(homePage);
     stackedWidget->addWidget(modelingPage);
     stackedWidget->addWidget(calculatorPage);
-    //stackedWidget->addWidget(devicesPage);
-    //stackedWidget->addWidget(opticalPhenomenaPage);
+    stackedWidget->addWidget(devicesPage);
+    stackedWidget->addWidget(opticalPhenomenaPage);
 
     // menu bar
     QMenuBar* menuBar = ui->menubar;
@@ -49,15 +49,15 @@ Pages::Pages(QWidget *parent) :
     menuBar->addAction(homeAction);
     menuBar->addAction(modelingAction);
     menuBar->addAction(calculatorAction);
-    //menuBar->addAction(devicesAction);
-    //menuBar->addAction(opticalPhenomenaAction);
+    menuBar->addAction(devicesAction);
+    menuBar->addAction(opticalPhenomenaAction);
 
     // triggers
     connect(homeAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(homePage); });
     connect(modelingAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(modelingPage); });
     connect(calculatorAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(calculatorPage); });
-    //connect(devicesAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(devicesPage); });
-    //connect(opticalPhenomenaAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(opticalPhenomenaPage); });
+    connect(devicesAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(devicesPage); });
+    connect(opticalPhenomenaAction, &QAction::triggered, [this]() { stackedWidget->setCurrentWidget(opticalPhenomenaPage); });
 }
 
 Pages::~Pages() {
