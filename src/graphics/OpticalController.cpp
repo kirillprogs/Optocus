@@ -31,10 +31,8 @@ Segment OpticalController::get_object() const {
 list<Segment> OpticalController::get_images() const {
     list<Segment> list;
     if (_optics.hasObject()) {
-        std::cout << "object " << _optics.object()->x() << " : " << _optics.object()->y() << '\n';
         for (const Image<Point> &image : _optics.objectImages()) {
             Segment segment(image.getImage(), Point(image.getImage().x(), 0));
-            std::cout << "image " << segment.startX() << " : " << segment.startY() << '\n';
             list.push_back(segment);
         }
     }

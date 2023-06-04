@@ -164,7 +164,7 @@ void GraphicsPanel::draw_images(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_image_rays(QPainter &painter) {
-    QPen penObjects(Qt::black);
+    QPen penObjects(Qt::lightGray);
     penObjects.setWidth(2);
     painter.setPen(penObjects);
     for (Segment line : controller->get_image_rays()) {

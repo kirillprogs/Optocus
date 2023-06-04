@@ -2,7 +2,6 @@
 #define OPTOCUS_OPTICAL_CONTROLLER_H
 
 #include "OpticalSystem.h"
-#include <iostream>
 
 class OpticalController {
 
