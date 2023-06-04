@@ -2,9 +2,6 @@
 // Created by Lilly on 26.05.2023.
 //
 
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include <QtCore/QEventLoop>
 #include "ManualPageWidget.h"
 #include "../style/OptStyle.h"
@@ -112,8 +109,7 @@ QWidget * ManualPageWidget::addImages(QJsonObject object) {
     QWidget *imageWidget = new QWidget(this);
     QLabel* imgLabel = new QLabel(this);
     QHBoxLayout *imageLayout = new QHBoxLayout();
-    QUrl imageUrl(imagePath);
-    QPixmap image = loadPixmapFromUrl(imageUrl);
+    QPixmap image(imagePath);
 
     if (!image.isNull()) {
         imgLabel->setFixedWidth(this->width()/2);
@@ -127,8 +123,7 @@ QWidget * ManualPageWidget::addImages(QJsonObject object) {
         // TODO: change model path to local files
         QString modelPath = object["model"].toString();
         QLabel* modelLabel = new QLabel(this);
-        QUrl modelUrl(imagePath);
-        QPixmap model = loadPixmapFromUrl(modelUrl);
+        QPixmap model(modelPath);
         if (!model.isNull()) {
             modelLabel->setFixedWidth(this->width()/2);
             modelLabel->setFixedHeight(this->height()/2);
@@ -140,19 +135,6 @@ QWidget * ManualPageWidget::addImages(QJsonObject object) {
 
     imageWidget->setLayout(imageLayout);
     return imageWidget;
-}
-
-QPixmap ManualPageWidget::loadPixmapFromUrl(const QUrl& url) {
-    QNetworkAccessManager manager;
-    QNetworkReply* reply = manager.get(QNetworkRequest(url));
-
-    QEventLoop eventLoop;
-    QObject::connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
-    eventLoop.exec();
-
-    QPixmap pixmap;
-    pixmap.loadFromData(reply->readAll());
-    return pixmap;
 }
 
 QLabel * ManualPageWidget::addLabel(QJsonObject object, const QString& type, int fontSize) {

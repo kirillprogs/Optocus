@@ -14,7 +14,6 @@ find_package(Qt6 COMPONENTS
         Widgets
         OpenGLWidgets
         OpenGL
-        Network
         REQUIRED)
 
 add_subdirectory(lib/calculating)
@@ -36,7 +35,6 @@ target_link_libraries(Optocus
         Qt::Widgets
         Qt::OpenGL
         Qt6::OpenGLWidgets
-        Qt6::Network
         calculating
         )
 if(UNIX)
