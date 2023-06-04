@@ -279,9 +279,9 @@ void GraphicsPanel::addLens() {
     QFormLayout formLayout(&dialog);
 
     QDoubleSpinBox powerSpinBox;
-    powerSpinBox.setRange(-10, 10);
+//    powerSpinBox.setRange(-10, 10);
     QDoubleSpinBox coordSpinBox;
-    coordSpinBox.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
+//    coordSpinBox.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
 
     formLayout.addRow(tr("Оптична сила:"), &powerSpinBox);
     formLayout.addRow(tr("Координата x:"), &coordSpinBox);

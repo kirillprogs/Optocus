@@ -7,10 +7,10 @@
 #include <QString>
 #include "pages.h"
 #include "ui_Pages.h"
-#include "../HomePageWidget.h"
-#include "../ModelingPageWidget.h"
-#include "../CalculatorPageWidget.h"
-#include "../ManualPageWidget.h"
+#include "../pages/HomePageWidget.h"
+#include "../pages/ModelingPageWidget.h"
+#include "../pages/CalculatorPageWidget.h"
+#include "../pages/ManualPageWidget.h"
 
 
 Pages::Pages(QWidget *parent) :

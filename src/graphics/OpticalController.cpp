@@ -59,3 +59,6 @@ void OpticalController::set_object(double x, double y) {
     _optics.set_object(Point(x, y));
     _optics.evaluate();
 }
+
+Point OpticalController::screenPoint(Point a) { return Point(screenX(a.x()), screenY(a.y())); }
+Segment OpticalController::screenSegment(Segment a) { return Segment(screenPoint(a.start()), screenPoint(a.end())); }
