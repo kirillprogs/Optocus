@@ -298,6 +298,11 @@ void GraphicsPanel::addLens() {
             return;
         }
         // or lens with coordinate coordSpinBox.value() is already exists?
+        else if (controller->lens_on_x_exists(coordSpinBox.value())) {
+            QMessageBox::critical(this, tr("Помилка!"),
+                                  tr("Лінза з такою координатою уже існує."));
+            return;
+        }
         dialog.accept();
     });
 
@@ -357,7 +362,14 @@ void GraphicsPanel::setCellScale() {
     formLayout.addRow(tr("Розмірність:"), &cell_scale);
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok);
     formLayout.addRow(&buttonBox);
-    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, [&]() {
+        if (cell_scale.value() == 0.0) {
+            QMessageBox::critical(this, tr("Помилка!"),
+                                  tr("Розмірність клітинки не може бути рівна 0."));
+            return;
+        }
+        dialog.accept();
+    });
 
     if (dialog.exec() == QDialog::Accepted) {
         QString res_measure = measure.currentText();

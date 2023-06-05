@@ -72,3 +72,12 @@ double OpticalController::convert_to_meter(double input, const QString& measure)
     }
     return input;
 }
+
+bool OpticalController::lens_on_x_exists(double x) const {
+    for(Lens lens : get_lenses()) {
+        if(lens.x() == x) {
+            return true;
+        }
+    }
+    return false;
+}

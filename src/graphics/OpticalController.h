@@ -77,6 +77,8 @@ public:
     Segment screenSegment(Segment a) { return Segment(screenPoint(a.start()), screenPoint(a.end())); }
 
     static double convert_to_meter(double input, const QString &measure);
+
+    bool lens_on_x_exists(double x) const;
 };
 
 #endif //OPTOCUS_OPTICAL_CONTROLLER_H
