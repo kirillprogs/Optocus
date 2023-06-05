@@ -28,7 +28,7 @@ public:
     };
 
     void addObject();
-
+    void setCellScale();
 private:
     QPixmap pixmap;
     QPoint startPoint;

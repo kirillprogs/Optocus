@@ -44,6 +44,9 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
         drawingWidget->addObject();
     });
     QPushButton *changeScaleButton = new QPushButton("Поміняти масштаб");
+    connect(changeScaleButton, &QPushButton::clicked, [=]() {
+        drawingWidget->setCellScale();
+    });
     QPushButton *saveButton = new QPushButton("Зберегти модель", this);
     connect(saveButton, &QPushButton::clicked, [=]() {
         drawingWidget->saveModel();

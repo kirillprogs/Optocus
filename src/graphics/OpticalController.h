@@ -1,6 +1,7 @@
 #ifndef OPTOCUS_OPTICAL_CONTROLLER_H
 #define OPTOCUS_OPTICAL_CONTROLLER_H
 
+#include <QString>
 #include "OpticalSystem.h"
 
 class OpticalController {
@@ -9,14 +10,16 @@ class OpticalController {
     static const int WIDTH = 1200;
     static const int HEIGHT = 720;
     static const int CELL_SIZE = 24;
+    static constexpr double DEFAULT_CELL_SCALE = 0.02;
     OpticalSystem _optics;
     double _scale;
+    double _cell_scale;
 
 public:
     static OpticalController *instance();
     enum ElementType { LENS, OBJECT, OBJECT_IMAGE, RAY };
 private:
-    OpticalController() : _scale(1.) { }
+    OpticalController() : _scale(1.), _cell_scale(DEFAULT_CELL_SCALE) { }
 
 public:
     int width() { return WIDTH; }
@@ -24,6 +27,7 @@ public:
     int centerX() { return width() / 2; }
     int centerY() { return height() / 2; }
     int cell_size() { return CELL_SIZE; }
+    double &cell_scale() { return _cell_scale; }
     double &scale() { return _scale; }
     const vector<Lens> &get_lenses() const;
     const list<Segment> &get_rays() const;
@@ -51,7 +55,7 @@ public:
     /* 1 pixel is (1 meter / _scale) / width() */
     /* X coordinate is (screenX - width() / 2) / (_scale * width())
      * = (1 / _scale) * ((screenX / width()) - 0.5) */
-    inline double meters_in_pixel() { return 1 / (_scale * width()); }
+    inline double meters_in_pixel() { return _cell_scale / (_scale * width() * DEFAULT_CELL_SCALE); }
 
     inline double getX(int screenX) {
         return ((double)screenX - 0.5 * width()) * meters_in_pixel();
@@ -71,6 +75,8 @@ public:
 
     Point screenPoint(Point a) { return Point(screenX(a.x()), screenY(a.y())); }
     Segment screenSegment(Segment a) { return Segment(screenPoint(a.start()), screenPoint(a.end())); }
+
+    static double convert_to_meter(double input, const QString &measure);
 };
 
 #endif //OPTOCUS_OPTICAL_CONTROLLER_H

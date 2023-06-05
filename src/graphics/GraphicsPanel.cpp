@@ -1,4 +1,6 @@
+#include <QComboBox>
 #include "GraphicsPanel.h"
+#include "../style/OptStyle.h"
 
 void GraphicsPanel::setDrawMode(DrawMode mode) { drawMode = mode; }
 
@@ -324,6 +326,32 @@ void GraphicsPanel::addObject() {
         double height = spinBox1.value();
         double x = spinBox2.value();
         controller->set_object(x, height);
+        update();
+    }
+}
+
+void GraphicsPanel::setCellScale() {
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Задайте розмір клітинки"));
+    QFormLayout formLayout(&dialog);
+
+    QComboBox measure;
+    QDoubleSpinBox cell_scale;
+
+    formLayout.addRow(tr("Одиниця вимірювання:"), &measure);
+    measure.addItem("м");
+    measure.addItem("см");
+    measure.addItem("мм");
+    measure.addItem("км");
+    formLayout.addRow(tr("Розмірність:"), &cell_scale);
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok);
+    formLayout.addRow(&buttonBox);
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QString res_measure = measure.currentText();
+        double res_scale = cell_scale.value();
+        controller->cell_scale() = OpticalController::convert_to_meter(res_scale, res_measure);
         update();
     }
 }

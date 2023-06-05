@@ -59,3 +59,16 @@ void OpticalController::set_object(double x, double y) {
     _optics.set_object(Point(x, y));
     _optics.evaluate();
 }
+
+double OpticalController::convert_to_meter(double input, const QString& measure) {
+    if (measure == "см") {
+        return 0.01 * input;
+    }
+    else if (measure == "мм") {
+        return 0.001 * input;
+    }
+    else if (measure == "км") {
+        return 1000 * input;
+    }
+    return input;
+}
