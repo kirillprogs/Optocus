@@ -42,6 +42,7 @@ public:
     void setDrawMode(DrawMode mode);
 
     void clearPanel();
+    void clearGeometry();
     void saveModel();
     void addLens();
 

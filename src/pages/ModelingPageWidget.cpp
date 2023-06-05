@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QSizePolicy>
 #include "ModelingPageWidget.h"
 
 ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
@@ -35,7 +36,7 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     connect(drawObjectButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Line);
     });*/
-    QPushButton *drawPointButton = new QPushButton("Намалювати точку");
+    QPushButton *drawPointButton = new QPushButton("Намалювати об'єкт");
     connect(drawPointButton, &QPushButton::clicked, [=]() {
         drawingWidget->setDrawMode(GraphicsPanel::DrawMode::Point);
     });
@@ -51,10 +52,19 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     connect(saveButton, &QPushButton::clicked, [=]() {
         drawingWidget->saveModel();
     });
-    QPushButton *clearButton = new QPushButton("Очистити");
+    QWidget *clear = new QWidget;
+    QHBoxLayout *clearLayout = new QHBoxLayout(clear);
+    QPushButton *clearDrawingsButton = new QPushButton("Очистити");
+    connect(clearDrawingsButton, &QPushButton::clicked, [=]() {
+        drawingWidget->clearGeometry();
+    });
+    QPushButton *clearButton = new QPushButton("Очистити все");
     connect(clearButton, &QPushButton::clicked, [=]() {
         drawingWidget->clearPanel();
     });
+    clearLayout->addWidget(clearDrawingsButton);
+    clearLayout->addWidget(clearButton);
+    clear->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 
     buttonPanelLayout->addWidget(addLensButton);
     buttonPanelLayout->addWidget(drawRayButton);
@@ -63,7 +73,7 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     buttonPanelLayout->addWidget(addObjectButton);
     buttonPanelLayout->addWidget(changeScaleButton);
     buttonPanelLayout->addWidget(saveButton);
-    buttonPanelLayout->addWidget(clearButton);
+    buttonPanelLayout->addWidget(clear);
 
     // Нижня права панель результатів обчислень
     QTextEdit *resultsText = new QTextEdit;

@@ -266,6 +266,11 @@ void GraphicsPanel::clearPanel()
     update();
 }
 
+void GraphicsPanel::clearGeometry() {
+    controller->clear_geometry();
+    update();
+}
+
 void GraphicsPanel::saveModel()
 {
     QString filePath =
