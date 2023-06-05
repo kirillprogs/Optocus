@@ -12,6 +12,9 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QComboBox>
+#include <QLabel>
+#include <QString>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
 #include <QDialogButtonBox>
@@ -21,12 +24,17 @@
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
+Q_OBJECT
 public:
     enum class DrawMode {
         Point,
         Line,
         Ray
     };
+
+    void setCellScale();
+signals:
+    void calculationsUpdated(const QString& results);
 
 private:
     QPixmap pixmap;
@@ -41,6 +49,7 @@ public:
     void setDrawMode(DrawMode mode);
 
     void clearPanel();
+    void clearGeometry();
     void saveModel();
     void addObject();
     void addLens();
@@ -58,6 +67,9 @@ private:
     void mousePressEvent(QMouseEvent* event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+
+    QString performCalculations();
+
 };
 
 #endif //OPTOCUS_GRAPHICS_PANEL_H

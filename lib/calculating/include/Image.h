@@ -20,7 +20,7 @@ public:
     Image(const Image<T>&) = default;
     Image<T> &operator=(const Image<T>&) = delete;
     bool exists() { return _exists; }
-    bool is_real() { return _is_real; }
+    bool is_real() const { return _is_real; }
     void addRay(const Segment&);
     const T &getObject() const { return _object; }
     const T &getImage() const { return _image; }

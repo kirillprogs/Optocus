@@ -60,5 +60,26 @@ void OpticalController::set_object(double x, double y) {
     _optics.evaluate();
 }
 
+double OpticalController::convert_to_meter(double input, const QString& measure) {
+    if (measure == "см") {
+        return 0.01 * input;
+    }
+    else if (measure == "мм") {
+        return 0.001 * input;
+    }
+    else if (measure == "км") {
+        return 1000 * input;
+    }
+    return input;
+}
+
+bool OpticalController::lens_on_x_exists(double x) const {
+    for(Lens lens : get_lenses()) {
+        if(lens.x() == x) {
+            return true;
+        }
+    }
+    return false;
+}
 Point OpticalController::screenPoint(Point a) { return Point(screenX(a.x()), screenY(a.y())); }
 Segment OpticalController::screenSegment(Segment a) { return Segment(screenPoint(a.start()), screenPoint(a.end())); }
