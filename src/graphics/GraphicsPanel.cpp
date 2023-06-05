@@ -1,5 +1,4 @@
-#include <QComboBox>
-#include "GraphicsPanel.h"
+﻿#include "GraphicsPanel.h"
 #include "../style/OptStyle.h"
 
 void GraphicsPanel::setDrawMode(DrawMode mode) { drawMode = mode; }
@@ -55,6 +54,8 @@ void GraphicsPanel::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
     QPainter painterGL(this);
     painterGL.drawPixmap(0, 0, pixmap);
+    QString results = performCalculations();
+    emit calculationsUpdated(results);
 }
 
 void GraphicsPanel::draw_cells(QPainter &painter)
@@ -382,4 +383,47 @@ void GraphicsPanel::setCellScale() {
         controller->cell_scale() = OpticalController::convert_to_meter(res_scale, res_measure);
         update();
     }
+}
+
+QString GraphicsPanel::performCalculations() {
+    QString results = "";
+
+    int lens_counter = 1;
+    if(!controller->get_lenses().empty()) {
+        results += "Система лінз:\n";
+    }
+    for(Lens lens : controller->get_lenses()) {
+        results += "D" + QString::number(lens_counter++) + "="
+                   + QString::number(lens.optPow()) + ", F=" + QString::number(lens.getFocusLength()) + "(м)\n";
+    }
+
+    if(controller->has_object()) {
+        results += "\nОб'єкт:\n";
+        results += "h=" + QString::number(-controller->get_object().startY()) + "\n";
+        results += "x: " + QString::number(controller->get_object().startX()) + "\n";
+        int image_counter = 1;
+        results += "\nЗображення:\n";
+        for(Segment image : controller->get_images()) {
+            results += QString::number(image_counter++) + ". ";
+            results += "H=" +
+                       QString::number(-image.startY()) + ", ";
+            if(abs(image.startY()) > abs(controller->get_object().startY())) {
+                results += "збільшене ";
+            }
+            else {
+                results += "зменшене ";
+            }
+            if((std::next((controller->objectImages()).begin(), image_counter))->is_real()) {
+                results += "дійсне.\n";
+            }
+            else {
+                results += "уявне.\n";
+            }
+            results += "x: " + QString::number(image.startX()) + "\n";
+        }
+
+    }
+    results += "\nРозмірність клітинки: " + QString::number(controller->cell_scale()) + " м\n";
+    results += "Ширина екрану: " + QString::number((controller->cell_scale() * 50) / controller->scale()) + " м";
+    return results;
 }

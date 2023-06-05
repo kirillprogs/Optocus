@@ -12,6 +12,9 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QComboBox>
+#include <QLabel>
+#include <QString>
 #include <QFormLayout>
 #include <QDoubleSpinBox>
 #include <QDialogButtonBox>
@@ -20,6 +23,7 @@
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
 {
+Q_OBJECT
 public:
     enum class DrawMode {
         Point,
@@ -29,6 +33,8 @@ public:
 
     void addObject();
     void setCellScale();
+signals:
+    void calculationsUpdated(const QString& results);
 private:
     QPixmap pixmap;
     QPoint startPoint;
@@ -61,6 +67,7 @@ private:
     void wheelEvent(QWheelEvent *event) override;
     QPoint getCoordinates(double x, double y);
 
+    QString performCalculations();
 };
 
 #endif //OPTOCUS_GRAPHICS_PANEL_H

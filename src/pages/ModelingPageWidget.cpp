@@ -8,6 +8,7 @@
 #include <QTextEdit>
 #include <QSizePolicy>
 #include "ModelingPageWidget.h"
+#include "../style/OptStyle.h"
 
 ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -76,10 +77,17 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     buttonPanelLayout->addWidget(clear);
 
     // Нижня права панель результатів обчислень
-    QTextEdit *resultsText = new QTextEdit;
+    QLabel *resultsLabel = new QLabel(rightPanel);
+    resultsLabel->setWordWrap(true);
+
+    QFont font = resultsLabel->font();
+    font.setPointSize(12);
+    resultsLabel->setFont(font);
+
+    connect(drawingWidget, &GraphicsPanel::calculationsUpdated, resultsLabel, &QLabel::setText);
 
     layout2->addWidget(buttonPanel, 1);
-    layout2->addWidget(resultsText, 1);
+    layout2->addWidget(resultsLabel, 1);
     layout->addWidget(rightPanel, 1);
 
 

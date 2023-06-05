@@ -30,6 +30,7 @@ public:
     double &cell_scale() { return _cell_scale; }
     double &scale() { return _scale; }
     const vector<Lens> &get_lenses() const;
+    const list<Image<Point>> &objectImages() const { return _optics.objectImages(); }
     const list<Segment> &get_rays() const;
     list<Segment> get_image_rays() const;
     bool has_object() const;
