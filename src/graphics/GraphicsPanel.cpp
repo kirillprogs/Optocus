@@ -32,12 +32,12 @@ void GraphicsPanel::paintGL()
         painter.begin(this);
     glScaled(controller->scale(), controller->scale(), 1.0);
 
-    painter.fillRect(0, 0, width(), height(), QColor(241, 250, 238));
+    painter.fillRect(0, 0, width(), height(), OptStyle::HONEYDEW);
 
     draw_cells(painter);
     draw_axis(painter);
 
-    QPen penObjects(Qt::black);
+    QPen penObjects(OptStyle::PLAIN_BLACK);
     penObjects.setWidth(5);
     painter.setPen(penObjects);
 
@@ -59,7 +59,9 @@ void GraphicsPanel::paintGL()
 
 void GraphicsPanel::draw_cells(QPainter &painter)
 {
-    QPen penSystem(QColor(29, 53, 87, 100));
+    QColor cell_color = OptStyle::BERKELEY_BLUE;
+    cell_color.setAlpha(100);
+    QPen penSystem(cell_color);
     penSystem.setWidth(1);
     painter.setPen(penSystem);
 
@@ -95,7 +97,7 @@ void GraphicsPanel::draw_cells(QPainter &painter)
 
 void GraphicsPanel::draw_lens(const Lens &lens, QPainter &painter)
 {
-    QPen penLens(QColor("#457B9D"));
+    QPen penLens(OptStyle::CERULEAN_BLUE);
     penLens.setWidth(3);
     painter.setPen(penLens);
 
@@ -128,7 +130,7 @@ void GraphicsPanel::draw_lens(const Lens &lens, QPainter &painter)
                       controller->screenX(lens.x()),
                       lensBottom);
 
-    QPen penFoci(QColor("#E63946"));
+    QPen penFoci(OptStyle::RED_PANTONE);
     penFoci.setWidth(5);
     painter.setPen(penFoci);
 
@@ -140,7 +142,7 @@ void GraphicsPanel::draw_lens(const Lens &lens, QPainter &painter)
 }
 
 void GraphicsPanel::draw_axis(QPainter &painter) {
-    QPen penSystem(QColor(29, 53, 87));
+    QPen penSystem(OptStyle::BERKELEY_BLUE);
     penSystem.setWidth(3);
     painter.setPen(penSystem);
     int optAxis = controller->height() / 2;
@@ -148,7 +150,7 @@ void GraphicsPanel::draw_axis(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_object(QPainter &painter) {
-    QPen penObjects(Qt::red);
+    QPen penObjects(OptStyle::RED_PANTONE);
     penObjects.setWidth(6);
     painter.setPen(penObjects);
     Segment line = controller->screenSegment(controller->get_object());
@@ -156,7 +158,7 @@ void GraphicsPanel::draw_object(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_images(QPainter &painter) {
-    QPen penObjects(Qt::darkCyan);
+    QPen penObjects(OptStyle::NON_PHOTO_BLUE.darker(150));
     penObjects.setWidth(4);
     painter.setPen(penObjects);
     for (Segment line : controller->get_images()) {
@@ -166,7 +168,7 @@ void GraphicsPanel::draw_images(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_image_rays(QPainter &painter) {
-    QPen penObjects(Qt::lightGray);
+    QPen penObjects(OptStyle::SILVER);
     penObjects.setWidth(2);
     painter.setPen(penObjects);
     for (Segment line : controller->get_image_rays()) {
@@ -176,7 +178,7 @@ void GraphicsPanel::draw_image_rays(QPainter &painter) {
 }
 
 void GraphicsPanel::draw_rays(QPainter &painter) {
-    QPen penObjects(Qt::yellow);
+    QPen penObjects(OptStyle::ORANGE_WEB);
     penObjects.setWidth(4);
     painter.setPen(penObjects);
     for (Segment ray : controller->get_rays()) {

@@ -26,6 +26,8 @@ public:
     static constexpr QColor PLAIN_BLACK = QColor(0, 0, 0);
     static constexpr QColor RED_PANTONE = QColor(230, 57, 70);
     static constexpr QColor SALMON_PINK = QColor(236, 154, 154);
+    static constexpr QColor ORANGE_WEB = QColor(249, 166, 32);
+    static constexpr QColor SILVER = QColor(188, 184, 177);
     OptStyle(): QProxyStyle("Fusion") {}
     void polish(QWidget *widget) override;
     void unpolish(QWidget *widget) override;
