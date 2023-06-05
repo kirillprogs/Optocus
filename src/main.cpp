@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QIcon>
 #include "style/OptStyle.h"
-#include "pages/gui_logic/pages.h"
+#include "gui_logic/pages.h"
 
 int main(int argc, char **argv)
 {

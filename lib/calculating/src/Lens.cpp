@@ -53,7 +53,7 @@ Image<Point> Lens::convergingImag(const Point &point) {
     Image<Point> imageObj(point, image, false);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
-    Point foreFocus(x() - getFocusLength());
+//    Point foreFocus(x() - getFocusLength());
     Point opticalCentre(x());
     imageObj.addRay(Segment(point, pointProjection));
     imageObj.addRay(Segment(point, imageProjection));
@@ -61,7 +61,7 @@ Image<Point> Lens::convergingImag(const Point &point) {
     imageObj.addRay(Segment(image, point));
     imageObj.addRay(Segment(image, imageProjection));
     imageObj.addRay(Segment(image, pointProjection));
-    imageObj.addRay(Segment(foreFocus, point));
+//    imageObj.addRay(Segment(foreFocus, point));
     return imageObj;
 }
 
@@ -70,16 +70,15 @@ Image<Point> Lens::convergingAft(const Point &point) {
     Image<Point> imageObj(point, image, true);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
-    Point foreFocus(x() - getFocusLength());
-    Point aftFocus(x() + getFocusLength());
+//    Point foreFocus(x() - getFocusLength());
+//    Point aftFocus(x() + getFocusLength());
     Point opticalCentre(x());
     imageObj.addRay(Segment(opticalCentre, image));
     imageObj.addRay(Segment(image, point));
     imageObj.addRay(Segment(pointProjection, point));
     imageObj.addRay(Segment(pointProjection, image));
-    imageObj.addRay(Segment(image, aftFocus));
-    imageObj.addRay(Segment(image, aftFocus));
-    imageObj.addRay(Segment(foreFocus, imageProjection));
+//    imageObj.addRay(Segment(image, aftFocus));
+//    imageObj.addRay(Segment(foreFocus, imageProjection));
     imageObj.addRay(Segment(imageProjection, point));
     imageObj.addRay(Segment(imageProjection, image));
     return imageObj;
@@ -90,17 +89,17 @@ Image<Point> Lens::divergingFore(const Point &point) {
     Image<Point> imageObj(point, image, false);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
-    Point foreFocus(x() - getFocusLength());
-    Point aftFocus(x() + getFocusLength());
+//    Point foreFocus(x() - getFocusLength());
+//    Point aftFocus(x() + getFocusLength());
     Point opticalCentre(x());
     imageObj.addRay(Segment(point, pointProjection));
     imageObj.addRay(Segment(point, image));
     imageObj.addRay(Segment(image, opticalCentre));
     imageObj.addRay(Segment(point, imageProjection));
-    imageObj.addRay(Segment(foreFocus, image));
+//    imageObj.addRay(Segment(foreFocus, image));
     imageObj.addRay(Segment(image, pointProjection));
     imageObj.addRay(Segment(image, imageProjection));
-    imageObj.addRay(Segment(imageProjection, aftFocus));
+//    imageObj.addRay(Segment(imageProjection, aftFocus));
     return imageObj;
 }
 
@@ -109,17 +108,17 @@ Image<Point> Lens::divergingReal(const Point &point) {
     Image<Point> imageObj(point, image, true);
     Point pointProjection(x(), point.y());
     Point imageProjection(x(), image.y());
-    Point foreFocus(x() - getFocusLength());
-    Point aftFocus(x() + getFocusLength());
+//    Point foreFocus(x() - getFocusLength());
+//    Point aftFocus(x() + getFocusLength());
     Point opticalCentre(x());
     imageObj.addRay(Segment(imageProjection, image));
     imageObj.addRay(Segment(pointProjection, image));
     imageObj.addRay(Segment(opticalCentre, image));
-    imageObj.addRay(Segment(opticalCentre, point));
+    imageObj.addRay(Segment(image, point));
     imageObj.addRay(Segment(pointProjection, point));
     imageObj.addRay(Segment(imageProjection, point));
-    imageObj.addRay(Segment(point, aftFocus));
-    imageObj.addRay(Segment(foreFocus, pointProjection));
+//    imageObj.addRay(Segment(point, aftFocus));
+//    imageObj.addRay(Segment(foreFocus, pointProjection));
     return imageObj;
 }
 
@@ -143,11 +142,25 @@ Image<Point> Lens::divergingImag(const Point &point) {
 }
 
 Image<Point> Lens::convergingNoImage(const Point &point) {
-    return Image<Point>(Point(), Point());
+    Point pointProjection(x(), point.y());
+    Point aftFocus(x() + getFocusLength());
+    Point opticalCentre(x());
+    Image<Point> imageObj(point, point, false, false);
+    imageObj.addRay(Segment(point, pointProjection));
+    imageObj.addRay(Segment(point, opticalCentre, true, false));
+    imageObj.addRay(Segment(pointProjection, aftFocus, true, false));
+    return imageObj;
 }
 
 Image<Point> Lens::divergingNoImage(const Point &point) {
-    return Image<Point>(Point(), Point());
+    Point pointProjection(x(), point.y());
+    Point foreFocus(x() - getFocusLength());
+    Point opticalCentre(x());
+    Image<Point> imageObj(point, point, false, false);
+    imageObj.addRay(Segment(pointProjection, point));
+    imageObj.addRay(Segment(foreFocus, pointProjection, true, false));
+    imageObj.addRay(Segment(opticalCentre, point, true, false));
+    return imageObj;
 }
 
 Image<Point> Lens::getImage(const Point &point) {
