@@ -108,22 +108,22 @@ void GraphicsPanel::draw_lens(const Lens &lens, QPainter &painter)
     int lensTop = controller->centerY() - lensHeight / 2;
     int lensBottom = controller->centerY() + lensHeight / 2;
 
-    painter.drawLine(controller->screenX(lens.x()) - lensWidth / 2,
-                      lensTop,
-                      controller->screenX(lens.x()),
-                      lensTop + (lens.isConverging() ? -10 : 10));
     painter.drawLine(controller->screenX(lens.x()),
-                      lensTop + (lens.isConverging() ? -10 : 10),
-                      controller->screenX(lens.x()) + lensWidth / 2,
+                      lensTop,
+                      controller->screenX(lens.x()) - lensWidth / 2,
+                      lensTop + (lens.isConverging() ? 10 : -10));
+    painter.drawLine(controller->screenX(lens.x()) + lensWidth / 2,
+                      lensTop + (lens.isConverging() ? 10 : -10),
+                      controller->screenX(lens.x()),
                       lensTop);
 
-    painter.drawLine(controller->screenX(lens.x()) - lensWidth / 2,
-                      lensBottom,
-                      controller->screenX(lens.x()),
-                      lensBottom + (lens.isConverging() ? 10 : -10));
     painter.drawLine(controller->screenX(lens.x()),
-                      lensBottom + (lens.isConverging() ? 10 : -10),
-                      controller->screenX(lens.x()) + lensWidth / 2,
+                      lensBottom,
+                      controller->screenX(lens.x()) - lensWidth / 2,
+                      lensBottom + (lens.isConverging() ? -10 : 10));
+    painter.drawLine(controller->screenX(lens.x()) + lensWidth / 2,
+                      lensBottom + (lens.isConverging() ? -10 : 10),
+                      controller->screenX(lens.x()),
                       lensBottom);
 
     painter.drawLine(controller->screenX(lens.x()),
@@ -289,9 +289,9 @@ void GraphicsPanel::addLens() {
     QFormLayout formLayout(&dialog);
 
     QDoubleSpinBox powerSpinBox;
-    powerSpinBox.setRange(-10, 10);
+    powerSpinBox.setRange(-100, 100);
     QDoubleSpinBox coordSpinBox;
-    coordSpinBox.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
+//    coordSpinBox.setRange(-this->width() / controller->cell_size(), this->width() / controller->cell_size());
 
     formLayout.addRow(tr("Оптична сила:"), &powerSpinBox);
     formLayout.addRow(tr("Координата x:"), &coordSpinBox);
@@ -337,6 +337,8 @@ void GraphicsPanel::addObject() {
     spinBox1.setRange(std::numeric_limits<double>::lowest(),std::numeric_limits<double>::infinity());
     spinBox2.setRange(std::numeric_limits<double>::lowest(),std::numeric_limits<double>::infinity());
 
+    spinBox1.setRange(-INFINITY, INFINITY);
+    spinBox2.setRange(-INFINITY, INFINITY);
     formLayout.addRow(tr("Висота об'єкта:"), &spinBox1);
     formLayout.addRow(tr("Координата x:"), &spinBox2);
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok);
