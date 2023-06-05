@@ -315,8 +315,16 @@ void GraphicsPanel::addObject() {
     dialog.setWindowTitle(tr("Додати об'єкт"));
     QFormLayout formLayout(&dialog);
 
+    QComboBox measure;
+    formLayout.addRow(tr("Одиниця вимірювання:"), &measure);
+    measure.addItem("м");
+    measure.addItem("см");
+    measure.addItem("мм");
+    measure.addItem("км");
     QDoubleSpinBox spinBox1;
     QDoubleSpinBox spinBox2;
+    spinBox1.setRange(std::numeric_limits<double>::lowest(),std::numeric_limits<double>::infinity());
+    spinBox2.setRange(std::numeric_limits<double>::lowest(),std::numeric_limits<double>::infinity());
 
     formLayout.addRow(tr("Висота об'єкта:"), &spinBox1);
     formLayout.addRow(tr("Координата x:"), &spinBox2);
@@ -325,9 +333,10 @@ void GraphicsPanel::addObject() {
     QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
 
     if (dialog.exec() == QDialog::Accepted) {
-        double height = spinBox1.value();
+        double height = -spinBox1.value();
         double x = spinBox2.value();
-        controller->set_object(x, height);
+        controller->set_object(OpticalController::convert_to_meter(x, measure.currentText()),
+                               OpticalController::convert_to_meter(height, measure.currentText()));
         update();
     }
 }
