@@ -19,6 +19,7 @@
 #include <QDoubleSpinBox>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+
 #include "OpticalController.h"
 
 class GraphicsPanel : public QOpenGLWidget, protected QOpenGLFunctions
@@ -31,10 +32,10 @@ public:
         Ray
     };
 
-    void addObject();
     void setCellScale();
 signals:
     void calculationsUpdated(const QString& results);
+
 private:
     QPixmap pixmap;
     QPoint startPoint;
@@ -68,6 +69,7 @@ private:
     void wheelEvent(QWheelEvent *event) override;
 
     QString performCalculations();
+
 };
 
 #endif //OPTOCUS_GRAPHICS_PANEL_H

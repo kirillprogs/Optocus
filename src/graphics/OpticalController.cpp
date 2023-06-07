@@ -81,7 +81,5 @@ bool OpticalController::lens_on_x_exists(double x) const {
     }
     return false;
 }
-
-
 Point OpticalController::screenPoint(Point a) { return Point(screenX(a.x()), screenY(a.y())); }
 Segment OpticalController::screenSegment(Segment a) { return Segment(screenPoint(a.start()), screenPoint(a.end())); }

@@ -57,6 +57,7 @@ public:
     /* 1 pixel is (1 meter / _scale) / width() */
     /* X coordinate is (screenX - width() / 2) / (_scale * width())
      * = (1 / _scale) * ((screenX / width()) - 0.5) */
+
     double meters_in_pixel() { return _cell_scale / (_scale * width() * DEFAULT_CELL_SCALE); }
 
     double getX(int screenX) {
@@ -78,6 +79,7 @@ public:
     static double convert_to_meter(double input, const QString &measure);
 
     bool lens_on_x_exists(double x) const;
+
     Point screenPoint(Point a);
     Segment screenSegment(Segment a);
 };
