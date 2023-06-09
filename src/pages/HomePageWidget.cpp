@@ -33,13 +33,23 @@ HomePageWidget::HomePageWidget(QWidget *parent) : QWidget(parent) {
     authorsLabel->setAlignment(Qt::AlignBottom | Qt::AlignRight);
     layout->addWidget(authorsLabel);
 
+    QLabel *instruction = new QLabel();
+    instruction->setText("<style>a { color: rgb(69, 123, 157); }</style>"
+            "<a href=\"https://docs.google.com/document/d/1GeObsPYyqNi_ZnEkZMar6FEwY4nj5gQyqymymfJwq3w/edit?usp=sharing\">Інструкція користувача</a>");
+    instruction->setTextFormat(Qt::RichText);
+    instruction->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    instruction->setOpenExternalLinks(true);
+    instruction->setAlignment(Qt::AlignBottom | Qt::AlignRight);
+    layout->addWidget(instruction);
+
     QFont titleFont = titleLabel->font();
     titleFont.setPointSize(48);
     titleLabel->setFont(titleFont);
 
     QFont authorsFont = authorsLabel->font();
-    authorsFont.setPointSize(14);
+    authorsFont.setPointSize(18);
     authorsLabel->setFont(authorsFont);
+    instruction->setFont(authorsFont);
 
     mainLayout->addWidget(centralWidget);
 }
