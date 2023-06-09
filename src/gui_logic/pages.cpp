@@ -9,7 +9,7 @@
 #include "ui_Pages.h"
 #include "../pages/HomePageWidget.h"
 #include "../pages/ModelingPageWidget.h"
-#include "../pages/CalculatorPageWidget.h"
+#include "../pages/FormulasPageWidget.h"
 #include "../pages/ManualPageWidget.h"
 
 
@@ -20,7 +20,7 @@ Pages::Pages(QWidget *parent) :
     // pages
     homePage = new HomePageWidget;
     modelingPage = new ModelingPageWidget;
-    calculatorPage = new CalculatorPageWidget;
+    calculatorPage = new FormulasPageWidget;
     devicesPage = new ManualPageWidget(ManualPageWidget::ManualType::DevicesPage);
     opticalPhenomenaPage = new ManualPageWidget(ManualPageWidget::ManualType::PhenomPage);
 
@@ -41,7 +41,7 @@ Pages::Pages(QWidget *parent) :
 
     homeAction = new QAction("Головна", this);
     modelingAction = new QAction("Моделювання", this);
-    calculatorAction = new QAction("Калькулятор", this);
+    calculatorAction = new QAction("Формули", this);
     devicesAction = new QAction("Пристрої", this);
     opticalPhenomenaAction = new QAction("Оптичні явища", this);
 
