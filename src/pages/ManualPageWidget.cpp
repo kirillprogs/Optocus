@@ -86,7 +86,8 @@ QString ManualPageWidget::getHeaders(QLayout& contentLayout) {
         contentLayout.addWidget(addLabel(phenomenonObj, "description", 14));
         contentLayout.addWidget(addImages(phenomenonObj));
 
-        navText += "<a href=\"#" + QString::number(counter++) + "\">" + phenomenonObj["name"].toString() + "</a><br>";
+        navText += "<style>a { color: rgb(69, 123, 157); }</style>"
+                   "<a href=\"#" + QString::number(counter++) + "\">" + phenomenonObj["name"].toString() + "</a><br>";
     }
     return navText;
 }
