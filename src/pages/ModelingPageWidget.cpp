@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QSizePolicy>
+#include <QScrollArea>
 #include "ModelingPageWidget.h"
 #include "../style/OptStyle.h"
 
@@ -76,18 +77,31 @@ ModelingPageWidget::ModelingPageWidget(QWidget *parent) : QWidget(parent) {
     buttonPanelLayout->addWidget(saveButton);
     buttonPanelLayout->addWidget(clear);
 
-    // Нижня права панель результатів обчислень
-    QLabel *resultsLabel = new QLabel(rightPanel);
+    // configure results display
+    QLabel *resultsLabel = new QLabel;
     resultsLabel->setWordWrap(true);
 
     QFont font = resultsLabel->font();
     font.setPointSize(12);
     resultsLabel->setFont(font);
 
+    QScrollArea *scrollArea = new QScrollArea;
+    QWidget *scrollWidget = new QWidget;
+    QVBoxLayout *scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout->addWidget(resultsLabel);
+
+    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidgetResizable(true);
+
     connect(drawingWidget, &GraphicsPanel::calculationsUpdated, resultsLabel, &QLabel::setText);
+    QPalette pal;
+    scrollArea->setWidgetResizable(true);
+    pal.setColor(QPalette::Window, OptStyle::MINT_GREEN);
+    scrollWidget->setAutoFillBackground(true);
+    scrollWidget->setPalette(pal);
 
     layout2->addWidget(buttonPanel, 1);
-    layout2->addWidget(resultsLabel, 1);
+    layout2->addWidget(scrollArea, 1);
     layout->addWidget(rightPanel, 1);
 
 
