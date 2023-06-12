@@ -113,21 +113,20 @@ QWidget * ManualPageWidget::addImages(QJsonObject object) {
     QPixmap image(imagePath);
 
     if (!image.isNull()) {
-        imgLabel->setFixedWidth(this->width()/2);
-        imgLabel->setFixedHeight(this->height()/2);
+        imgLabel->setFixedWidth(500);
+        imgLabel->setFixedHeight(400);
         imgLabel->setPixmap(image.scaled(imgLabel->width(),imgLabel->height(),Qt::KeepAspectRatio));
         imgLabel->setAlignment(Qt::AlignCenter);
     }
     imageLayout->addWidget(imgLabel);
 
-    if(page_type == ManualType::DevicesPage) {
-        // TODO: change model path to local files
+    if(object.contains("model")) {
         QString modelPath = object["model"].toString();
         QLabel* modelLabel = new QLabel(this);
         QPixmap model(modelPath);
         if (!model.isNull()) {
-            modelLabel->setFixedWidth(this->width()/2);
-            modelLabel->setFixedHeight(this->height()/2);
+            modelLabel->setFixedWidth(500);
+            modelLabel->setFixedHeight(400);
             modelLabel->setPixmap(model.scaled(modelLabel->width(),modelLabel->height(),Qt::KeepAspectRatio));
             modelLabel->setAlignment(Qt::AlignCenter);
         }
